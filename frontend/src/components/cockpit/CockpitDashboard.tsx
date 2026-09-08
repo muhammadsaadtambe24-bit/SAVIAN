@@ -56,7 +56,7 @@ export function CockpitDashboard({
               <Train className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
-              <h1 className="text-lg font-bold tracking-tight">LINE CLEAR</h1>
+              <h1 className="text-lg font-bold tracking-tight">SAVIAN</h1>
               <p className="text-xs text-muted-foreground">
                 Operations Cockpit — Block Scheduling AI
               </p>

@@ -1,5 +1,5 @@
 """
-Solver Optimization Router for LINE CLEAR Railway Block Scheduling System.
+Solver Optimization Router for SAVIAN Railway Block Scheduling System.
 Dispatches background CP-SAT solves, streams progress, persists schedule results,
 and provides comparative analytics against naive chaos scheduling.
 """
@@ -252,13 +252,13 @@ def get_solve_result(
     }
 
 
-@router.get("/{solve_id}/comparison", summary="Get side-by-side KPIs: Chaos baseline vs. LINE CLEAR")
+@router.get("/{solve_id}/comparison", summary="Get side-by-side KPIs: Chaos baseline vs. SAVIAN")
 def get_solve_comparison(
     solve_id: str,
     session: Session = Depends(get_session),
 ) -> Dict[str, Any]:
     """
-    Generate side-by-side KPI comparison: Naive uncoordinated schedule vs. LINE CLEAR.
+    Generate side-by-side KPI comparison: Naive uncoordinated schedule vs. SAVIAN.
     """
     # 1. Retrieve solver result
     solver_result = None

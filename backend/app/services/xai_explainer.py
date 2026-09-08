@@ -1,7 +1,7 @@
 """
-Explainable AI (XAI) Operational Rationale & Attribution Service (LINE CLEAR).
+Explainable AI (XAI) Operational Rationale & Attribution Service (SAVIAN).
 
-Compares the optimized LINE CLEAR schedule with the naive chaos baseline to generate:
+Compares the optimized SAVIAN schedule with the naive chaos baseline to generate:
 1. Operational Block Shift Justifications: Explanations of why specific maintenance windows moved.
 2. Shadow Co-utilization Merges: Tracking multi-departmental corridor coupling.
 3. Conflict Resolution Audit: Proof that physical train-block collisions were eliminated.
@@ -17,7 +17,7 @@ def generate_explanations(
     chaos_result: Dict[str, Any],
 ) -> Dict[str, Any]:
     """
-    Compare LINE CLEAR schedule with chaos baseline and generate human-readable
+    Compare SAVIAN schedule with chaos baseline and generate human-readable
     explanations, shift rationale, merged shadow analysis, and constraint attribution.
 
     Args:
@@ -153,7 +153,7 @@ def generate_explanations(
     }
 
     summary = (
-        f"LINE CLEAR resolved {len(chaos_clashes)} severe physical clashes present in the uncoordinated baseline. "
+        f"SAVIAN resolved {len(chaos_clashes)} severe physical clashes present in the uncoordinated baseline. "
         f"Through intelligent window shifts, {shadow_count} inter-departmental shadow blocks were merged, "
         f"saving approximately {round(sum(m['mobilization_hours_saved'] for m in merged_shadows), 1)} hours of track possession mobilization."
     )

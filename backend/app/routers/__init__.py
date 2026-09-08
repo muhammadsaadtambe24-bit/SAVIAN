@@ -1,5 +1,5 @@
 """
-Routers for LINE CLEAR Railway Block Scheduling API.
+Routers for SAVIAN Railway Block Scheduling API.
 """
 
 from app.routers.corridor import router as corridor_router

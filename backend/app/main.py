@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="LINE CLEAR",
+    title="SAVIAN",
     description="AI-powered Railway Block Scheduling & Arbitration System — SIH 2026",
     version="1.0.0",
     lifespan=lifespan,
@@ -55,5 +55,5 @@ app.include_router(pdf_router, prefix="/api/pdf", tags=["PDF"])
 @app.get("/", tags=["health"])
 async def root():
     """Health check endpoint."""
-    return {"app": "LINE CLEAR", "version": "1.0.0", "status": "running"}
+    return {"app": "SAVIAN", "version": "1.0.0", "status": "running"}
 

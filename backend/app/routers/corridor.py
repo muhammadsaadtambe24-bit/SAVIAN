@@ -1,5 +1,5 @@
 """
-Corridor Infrastructure Router for LINE CLEAR Railway Block Scheduling System.
+Corridor Infrastructure Router for SAVIAN Railway Block Scheduling System.
 Provides stations chainage data and adjacent track section Kavach ATP deployment status.
 """
 

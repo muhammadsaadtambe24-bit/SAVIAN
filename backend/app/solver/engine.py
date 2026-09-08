@@ -1,5 +1,5 @@
 """
-Core CP-SAT Railway Block Scheduling Engine for Indian Railways (LINE CLEAR).
+Core CP-SAT Railway Block Scheduling Engine for Indian Railways (SAVIAN).
 
 Indian Railways (IR) operates the fourth largest railway network in the world.
 On congested double-track trunk routes such as Bina Junction (BINA) to Itarsi Junction (ET)

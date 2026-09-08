@@ -12,7 +12,7 @@ export const LifecycleView: React.FC = () => {
     { key: 'PROPOSED', label: '1. Proposed', desc: 'Depot / Field Input', color: 'border-slate-700 bg-slate-900/80 text-slate-300' },
     { key: 'REVIEWED', label: '2. Reviewed', desc: 'Engineering Branch', color: 'border-blue-500/40 bg-blue-950/30 text-blue-300' },
     { key: 'APPROVED', label: '3. Approved', desc: 'Sr. DOM / Traffic', color: 'border-emerald-500/40 bg-emerald-950/30 text-emerald-300' },
-    { key: 'EXECUTED', label: '4. Executed', desc: 'SM Line Clear Given', color: 'border-amber-500/40 bg-amber-950/30 text-amber-300' },
+    { key: 'EXECUTED', label: '4. Executed', desc: 'SM SAVIAN Given', color: 'border-amber-500/40 bg-amber-950/30 text-amber-300' },
     { key: 'CLOSED', label: '5. Closed', desc: 'Handover & TSR', color: 'border-purple-500/40 bg-purple-950/30 text-purple-300' },
   ];
 
@@ -29,7 +29,7 @@ export const LifecycleView: React.FC = () => {
               Indian Railways Block Lifecycle Workflow
             </h2>
             <p className="text-xs text-slate-400">
-              End-to-End Governance: From Field Depot Proposal to Station Master Line Clear & Section Closure
+              End-to-End Governance: From Field Depot Proposal to Station Master SAVIAN & Section Closure
             </p>
           </div>
         </div>

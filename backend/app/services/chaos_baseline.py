@@ -1,5 +1,5 @@
 """
-Chaos Baseline Scheduling Service (LINE CLEAR).
+Chaos Baseline Scheduling Service (SAVIAN).
 
 Simulates the legacy manual or naive FIFO block scheduling practice:
 - Demands are granted in strict arrival order at their exact requested times without deconfliction.

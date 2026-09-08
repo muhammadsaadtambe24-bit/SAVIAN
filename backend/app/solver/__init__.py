@@ -1,5 +1,5 @@
 """
-Indian Railways Block Scheduling Optimization Engine (LINE CLEAR).
+Indian Railways Block Scheduling Optimization Engine (SAVIAN).
 
 Core CP-SAT constraint-programming solver package built on Google OR-Tools.
 """

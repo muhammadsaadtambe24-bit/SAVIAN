@@ -1,5 +1,5 @@
 """
-Clash Detection Service for Indian Railways Block Scheduling (LINE CLEAR).
+Clash Detection Service for Indian Railways Block Scheduling (SAVIAN).
 
 Evaluates schedules for:
 1. Section Overlaps: Train and maintenance block occupying the same track section simultaneously.

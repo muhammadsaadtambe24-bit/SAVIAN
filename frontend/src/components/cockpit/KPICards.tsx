@@ -175,7 +175,7 @@ export function KPICards({ chaosResult, solverResult, chaosMode }: KPICardsProps
                     </span>
                     <span className="text-muted-foreground/40">|</span>
                     <span className={cn(!chaosMode ? "font-semibold text-emerald-400" : "")}>
-                      LINE CLEAR: {card.clearValue}
+                      SAVIAN: {card.clearValue}
                     </span>
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export function KPICards({ chaosResult, solverResult, chaosMode }: KPICardsProps
                     </span>
                     <span className="text-muted-foreground/40">|</span>
                     <span className={cn(!chaosMode ? "font-semibold text-emerald-400" : "")}>
-                      LINE CLEAR: {card.clearValue}%
+                      SAVIAN: {card.clearValue}%
                     </span>
                   </div>
                 </div>
@@ -239,7 +239,7 @@ export function KPICards({ chaosResult, solverResult, chaosMode }: KPICardsProps
                     </span>
                     <span className="text-muted-foreground/40">|</span>
                     <span className={cn(!chaosMode ? "font-semibold text-blue-400" : "")}>
-                      LINE CLEAR: {card.clearValue}
+                      SAVIAN: {card.clearValue}
                     </span>
                   </div>
                 </div>

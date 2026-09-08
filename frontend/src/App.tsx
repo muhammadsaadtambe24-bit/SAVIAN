@@ -70,7 +70,7 @@ export const App: React.FC = () => {
       case 'lifecycle':
         return {
           title: 'Block Lifecycle',
-          subtitle: 'Proposal to Line Clear Execution Pipeline',
+          subtitle: 'Proposal to SAVIAN Execution Pipeline',
         };
       case 'settings':
         return {
@@ -78,7 +78,7 @@ export const App: React.FC = () => {
           subtitle: 'Corridor Rules & Kavach Constraints',
         };
       default:
-        return { title: 'LINE CLEAR' };
+        return { title: 'SAVIAN' };
     }
   };
 

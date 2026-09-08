@@ -1,4 +1,4 @@
-# 🚆 LINE CLEAR
+# 🚆 SAVIAN
 
 **AI-powered Railway Block Scheduling & Arbitration System**
 
@@ -6,7 +6,7 @@ Smart India Hackathon (SIH) 2026 — West Central Railway, Bina–Itarsi Corrido
 
 ## What it does
 
-LINE CLEAR ingests BDMS-shaped maintenance demand data, applies trust-weighted scoring, and runs a Google OR-Tools CP-SAT constraint-programming solver to produce a collision-free, prioritized, and auditable block plan.
+SAVIAN ingests BDMS-shaped maintenance demand data, applies trust-weighted scoring, and runs a Google OR-Tools CP-SAT constraint-programming solver to produce a collision-free, prioritized, and auditable block plan.
 
 ## Tech Stack
 

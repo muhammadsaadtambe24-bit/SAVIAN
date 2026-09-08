@@ -40,7 +40,7 @@ export function ChaosOrderToggle({ chaosMode, onToggleChaos }: ChaosOrderToggleP
           )}
         />
 
-        {/* LINE CLEAR label */}
+        {/* SAVIAN label */}
         <div className="flex items-center gap-2 min-w-[120px]">
           <span
             className={cn(
@@ -48,7 +48,7 @@ export function ChaosOrderToggle({ chaosMode, onToggleChaos }: ChaosOrderToggleP
               !chaosMode ? "text-emerald-500" : "text-muted-foreground/50"
             )}
           >
-            LINE CLEAR
+            SAVIAN
           </span>
           <span
             className={cn(

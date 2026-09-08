@@ -1,5 +1,5 @@
 """
-Kavach Automatic Train Protection (ATP) Headway Module for Indian Railways (LINE CLEAR).
+Kavach Automatic Train Protection (ATP) Headway Module for Indian Railways (SAVIAN).
 
 Kavach is the indigenous Automatic Train Protection (ATP) system adopted by Indian Railways
 (Research Designs and Standards Organisation - RDSO, Specification TAC-903 / SPG-903).

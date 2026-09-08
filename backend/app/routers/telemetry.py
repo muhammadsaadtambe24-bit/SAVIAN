@@ -1,5 +1,5 @@
 """
-Telemetry Streaming & Pub/Sub Router for LINE CLEAR Railway Block Scheduling System.
+Telemetry Streaming & Pub/Sub Router for SAVIAN Railway Block Scheduling System.
 Provides Server-Sent Events (SSE) for real-time solver convergence updates and status events.
 """
 
@@ -98,7 +98,7 @@ async def stream_telemetry(session_id: str, request: Request) -> EventSourceResp
                 "event": "connected",
                 "data": json.dumps({
                     "session_id": session_id,
-                    "message": "Connected to LINE CLEAR Telemetry Bus",
+                    "message": "Connected to SAVIAN Telemetry Bus",
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                 }),
             }

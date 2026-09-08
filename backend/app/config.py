@@ -1,5 +1,5 @@
 """
-LINE CLEAR — Application Configuration
+SAVIAN — Application Configuration
 Uses pydantic-settings for environment variable management.
 """
 
@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables or .env file."""
 
     # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./data/lineclear.db"
+    DATABASE_URL: str = "sqlite+aiosqlite:///./data/savian.db"
 
     # CORS
     CORS_ORIGINS: list[str] = ["*"]

@@ -1,5 +1,5 @@
 """
-PDF Document Generation Router for LINE CLEAR Railway Block Scheduling System.
+PDF Document Generation Router for SAVIAN Railway Block Scheduling System.
 Generates:
 1. Indian Railways Form T/409 Caution Order PDF (Temporary Speed Restrictions).
 2. Digital Track Possession Record & Block Permit PDF.
@@ -311,7 +311,7 @@ def generate_possession_record(
     story = []
 
     # Title Banner
-    story.append(Paragraph("INDIAN RAILWAYS - LINE CLEAR SYSTEM", title_style))
+    story.append(Paragraph("INDIAN RAILWAYS - SAVIAN SYSTEM", title_style))
     story.append(Paragraph("DIGITAL TRACK POSSESSION RECORD & SAFETY MEMO", subtitle_style))
     story.append(Paragraph("BHOPAL DIVISION (WEST CENTRAL RAILWAY) - CORRIDOR TRAFFIC CONTROL", ParagraphStyle(
         "Meta", parent=styles["Normal"], fontSize=8, alignment=1, textColor=colors.HexColor("#64748b"), spaceAfter=10
@@ -347,7 +347,7 @@ def generate_possession_record(
 
     cert_text = (
         "<b>CONTROLLER SAFETY CERTIFICATION:</b> "
-        "Line Clear has been formally suspended on the specified section under absolute block instrument locking. "
+        "SAVIAN has been formally suspended on the specified section under absolute block instrument locking. "
         "Signals leading to the section are clamped to 'ON' (Danger). "
         "Section Supervisor is authorized to enter and occupy track with accredited manpower and machinery."
     )
