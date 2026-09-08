@@ -38,8 +38,10 @@ async def create_db_and_tables():
         await conn.run_sync(SQLModel.metadata.create_all)
 
 
-async def get_session():
-    """FastAPI dependency — yields an async DB session."""
-    async with async_session() as session:
+def get_session():
+    """FastAPI dependency — yields a DB session."""
+    from sqlmodel import Session
+    with Session(sync_engine) as session:
         yield session
+
 

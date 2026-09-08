@@ -13,7 +13,8 @@ import {
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
-export type NavItemKey = 'dashboard' | 'demands' | 'solver' | 'lifecycle' | 'settings';
+export type NavItemKey = 'dashboard' | 'marey' | 'demands' | 'solver' | 'lifecycle' | 'settings';
+
 
 interface SidebarProps {
   activeNav: NavItemKey;
@@ -47,9 +48,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: LayoutDashboard,
     },
     {
+      key: 'marey',
+      label: 'Marey Chart',
+      icon: Train,
+      badge: 'D3 Live',
+      badgeVariant: 'railway',
+    },
+    {
       key: 'demands',
       label: 'Demands',
       icon: FileText,
+
       badge: demandCount > 0 ? demandCount : undefined,
       badgeVariant: 'warning',
     },

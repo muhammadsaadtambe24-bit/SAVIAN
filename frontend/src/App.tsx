@@ -3,7 +3,9 @@ import { Sidebar, NavItemKey } from '@/components/layout/Sidebar';
 import { Header, SolverStatusType } from '@/components/layout/Header';
 import { StatusBar } from '@/components/layout/StatusBar';
 import { DashboardView } from '@/components/views/DashboardView';
+import { MareyView } from '@/components/views/MareyView';
 import { DemandsView } from '@/components/views/DemandsView';
+
 import { SolverView } from '@/components/views/SolverView';
 import { LifecycleView } from '@/components/views/LifecycleView';
 import { SettingsView } from '@/components/views/SettingsView';
@@ -49,7 +51,13 @@ export const App: React.FC = () => {
           title: 'Corridor Overview',
           subtitle: 'Live Operations & Block Schedule Dashboard',
         };
+      case 'marey':
+        return {
+          title: 'Marey Time-Space Diagram',
+          subtitle: 'Interactive Stringline Timetable & Block Bands (D3.js)',
+        };
       case 'demands':
+
         return {
           title: 'Block Demands',
           subtitle: 'TMS, SMMS & TDMS Maintenance Requests',
@@ -110,11 +118,19 @@ export const App: React.FC = () => {
                 chaosMode={chaosMode}
                 onRunSolver={handleRunSolver}
                 solverStatus={solverStatus}
-                onNavigate={(view) => setActiveNav(view)}
+                onNavigate={(view) => setActiveNav(view as any)}
+              />
+            )}
+
+            {activeNav === 'marey' && (
+              <MareyView
+                chaosMode={chaosMode}
+                onChaosModeChange={(chaos) => setChaosMode(chaos)}
               />
             )}
 
             {activeNav === 'demands' && <DemandsView />}
+
 
             {activeNav === 'solver' && (
               <SolverView
