@@ -1,0 +1,223 @@
+import { Station, BlockDemand, SolverResult, GrantedBlock, TelemetryEvent } from '@/types';
+
+export const MOCK_STATIONS: Station[] = [
+  { id: 1, code: 'BINA', name: 'Bina Junction', distance_km: 0.0, division: 'BPL', zone: 'WCR', kavach_status: 'COMMISSIONED' },
+  { id: 2, code: 'KIKA', name: 'Kurwai Kethora', distance_km: 8.4, division: 'BPL', zone: 'WCR', kavach_status: 'COMMISSIONED' },
+  { id: 3, code: 'MNDR', name: 'Mandi Bamora', distance_km: 19.8, division: 'BPL', zone: 'WCR', kavach_status: 'COMMISSIONED' },
+  { id: 4, code: 'BAQ', name: 'Ganj Basoda', distance_km: 33.1, division: 'BPL', zone: 'WCR', kavach_status: 'COMMISSIONED' },
+  { id: 5, code: 'GLG', name: 'Gulabganj', distance_km: 45.7, division: 'BPL', zone: 'WCR', kavach_status: 'IN_TRIALS' },
+  { id: 6, code: 'BHS', name: 'Vidisha', distance_km: 61.9, division: 'BPL', zone: 'WCR', kavach_status: 'IN_TRIALS' },
+  { id: 7, code: 'SCI', name: 'Sanchi', distance_km: 75.4, division: 'BPL', zone: 'WCR', kavach_status: 'IN_TRIALS' },
+  { id: 8, code: 'BPL', name: 'Bhopal Junction', distance_km: 92.3, division: 'BPL', zone: 'WCR', kavach_status: 'COMMISSIONED' },
+  { id: 9, code: 'RKMP', name: 'Rani Kamlapati', distance_km: 98.7, division: 'BPL', zone: 'WCR', kavach_status: 'COMMISSIONED' },
+  { id: 10, code: 'MDDP', name: 'Mandideep', distance_km: 114.2, division: 'BPL', zone: 'WCR', kavach_status: 'NOT_EQUIPPED' },
+  { id: 11, code: 'BKA', name: 'Barkhera', distance_km: 129.5, division: 'BPL', zone: 'WCR', kavach_status: 'NOT_EQUIPPED' },
+  { id: 12, code: 'ODG', name: 'Obaidulla Ganj', distance_km: 141.0, division: 'BPL', zone: 'WCR', kavach_status: 'NOT_EQUIPPED' },
+  { id: 13, code: 'ET', name: 'Itarsi Junction', distance_km: 152.4, division: 'BPL', zone: 'WCR', kavach_status: 'COMMISSIONED' },
+];
+
+export const MOCK_DEMANDS: BlockDemand[] = [
+  {
+    id: 101,
+    demand_code: 'TMS-2026-089',
+    source_system: 'TMS',
+    department: 'P_WAY',
+    section_from: 'BINA',
+    section_to: 'KIKA',
+    start_km: 2.5,
+    end_km: 6.8,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 120, // 02:00
+    requested_end_minutes: 270,   // 04:30
+    required_minutes: 150,
+    activity_description: 'BCM Ballast Cleaning Machine deep screening track maintenance',
+    machinery_type: 'BCM-Plasser-09',
+    machinery_id: 'BCM-902',
+    status: 'APPROVED',
+    trust_score: 92,
+    severity_tier: 'CRITICAL',
+    priority_weight: 9.5,
+    power_block_required: true,
+    disconnection_required: true,
+    speed_restriction_kmph: 30,
+  },
+  {
+    id: 102,
+    demand_code: 'SMMS-2026-114',
+    source_system: 'SMMS',
+    department: 'OHE',
+    section_from: 'BINA',
+    section_to: 'KIKA',
+    start_km: 2.0,
+    end_km: 7.0,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 130, // 02:10
+    requested_end_minutes: 250,   // 04:10
+    required_minutes: 120,
+    activity_description: 'Contact wire height checking & cantilever replacement (Shadow Opportunity)',
+    machinery_type: 'Tower Wagon',
+    machinery_id: 'TW-44',
+    status: 'REVIEWED',
+    trust_score: 88,
+    severity_tier: 'HIGH',
+    priority_weight: 7.8,
+    power_block_required: true,
+    disconnection_required: false,
+  },
+  {
+    id: 103,
+    demand_code: 'TDMS-2026-042',
+    source_system: 'TDMS',
+    department: 'S_AND_T',
+    section_from: 'BAQ',
+    section_to: 'GLG',
+    start_km: 35.0,
+    end_km: 38.2,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 300, // 05:00
+    requested_end_minutes: 420,   // 07:00
+    required_minutes: 120,
+    activity_description: 'Electronic Interlocking dual-VDU point machine overhaul',
+    machinery_type: 'Signal Testing Rig',
+    machinery_id: 'ST-12',
+    status: 'PROPOSED',
+    trust_score: 79,
+    severity_tier: 'MEDIUM',
+    priority_weight: 6.2,
+    power_block_required: false,
+    disconnection_required: true,
+  },
+  {
+    id: 104,
+    demand_code: 'TMS-2026-095',
+    source_system: 'TMS',
+    department: 'P_WAY',
+    section_from: 'BPL',
+    section_to: 'RKMP',
+    start_km: 93.0,
+    end_km: 97.5,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 60,  // 01:00
+    requested_end_minutes: 240,  // 04:00
+    required_minutes: 180,
+    activity_description: 'CSM Duomatic continuous track tamping & lining',
+    machinery_type: 'CSM Tamper',
+    machinery_id: 'CSM-77',
+    status: 'APPROVED',
+    trust_score: 95,
+    severity_tier: 'CRITICAL',
+    priority_weight: 9.8,
+    power_block_required: false,
+    disconnection_required: true,
+    speed_restriction_kmph: 45,
+  },
+  {
+    id: 105,
+    demand_code: 'SMMS-2026-121',
+    source_system: 'SMMS',
+    department: 'OHE',
+    section_from: 'BKA',
+    section_to: 'ODG',
+    start_km: 131.0,
+    end_km: 137.0,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 660, // 11:00
+    requested_end_minutes: 780, // 13:00
+    required_minutes: 90,
+    activity_description: 'Mid-span neutral section dropper adjustment and isolator testing',
+    machinery_type: '8-Wheeler Tower Wagon',
+    machinery_id: 'TW-801',
+    status: 'EXECUTED',
+    trust_score: 84,
+    severity_tier: 'LOW',
+    priority_weight: 4.5,
+    power_block_required: true,
+    disconnection_required: false,
+  },
+];
+
+export const MOCK_SOLVER_RESULT: SolverResult = {
+  solve_id: 'SOLV-2026-BPL-0941',
+  status: 'OPTIMAL',
+  objective_value: 142.5,
+  optimality_gap: 0.0,
+  wall_time_sec: 1.84,
+  train_schedules: {
+    '12002_NDLS_BPL_SHATABDI': { start: 135, end: 220, delay: 0 },
+    '12155_SHAN_E_BHOPAL': { start: 180, end: 285, delay: 5 },
+    '20805_ANDHRA_PRADESH_EXP': { start: 240, end: 360, delay: 0 },
+    'BOXN_FREIGHT_8821': { start: 90, end: 240, delay: 20 },
+  },
+  block_schedules: {
+    'TMS-2026-089': { start: 120, end: 270, section: 'BINA-KIKA', is_shadow: false },
+    'SMMS-2026-114': { start: 130, end: 250, section: 'BINA-KIKA', is_shadow: true, shadow_parent: 'TMS-2026-089' },
+    'TMS-2026-095': { start: 60, end: 240, section: 'BPL-RKMP', is_shadow: false },
+  },
+  clashes_detected: 0,
+  shadow_merges: 2,
+  xai: {
+    conflict_resolutions: [
+      {
+        block_id: 'TMS-2026-089',
+        shifted_minutes: 15,
+        reason: 'Shifted +15 min to clear 12002 Shatabdi Express priority slot without speed debt',
+      },
+      {
+        block_id: 'SMMS-2026-114',
+        shifted_minutes: -10,
+        reason: 'Co-aligned inside TMS-2026-089 shadow window under common power block',
+      },
+    ],
+    shadow_detections: [
+      {
+        primary: 'TMS-2026-089 (P_WAY)',
+        shadow: 'SMMS-2026-114 (OHE)',
+        time_saved_hours: 2.0,
+      },
+      {
+        primary: 'TMS-2026-095 (P_WAY)',
+        shadow: 'TDMS-2026-042 (S_AND_T)',
+        time_saved_hours: 1.5,
+      },
+    ],
+    constraint_waterfall: {
+      train_delay_pct: 12.4,
+      block_deviation_pct: 6.8,
+      shadow_bonus_pct: 28.5,
+    },
+  },
+};
+
+export const MOCK_GRANTED_BLOCKS: GrantedBlock[] = [
+  {
+    id: 1,
+    solve_id: 'SOLV-2026-BPL-0941',
+    demand_id: 101,
+    demand_code: 'TMS-2026-089',
+    granted_start_minutes: 120,
+    granted_end_minutes: 270,
+    section_from: 'BINA',
+    section_to: 'KIKA',
+    is_shadow: false,
+  },
+  {
+    id: 2,
+    solve_id: 'SOLV-2026-BPL-0941',
+    demand_id: 102,
+    demand_code: 'SMMS-2026-114',
+    granted_start_minutes: 130,
+    granted_end_minutes: 250,
+    section_from: 'BINA',
+    section_to: 'KIKA',
+    is_shadow: true,
+    shadow_parent_id: 1,
+  },
+];
+
+export const MOCK_TELEMETRY: TelemetryEvent[] = [
+  { iteration: 1, objective_cost: 380.2, best_bound: 110.0, time_sec: 0.2 },
+  { iteration: 5, objective_cost: 260.4, best_bound: 125.0, time_sec: 0.6 },
+  { iteration: 12, objective_cost: 190.1, best_bound: 135.0, time_sec: 1.1 },
+  { iteration: 20, objective_cost: 154.0, best_bound: 140.0, time_sec: 1.5 },
+  { iteration: 28, objective_cost: 142.5, best_bound: 142.5, time_sec: 1.84 },
+];

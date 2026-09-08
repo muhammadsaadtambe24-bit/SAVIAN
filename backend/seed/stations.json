@@ -1,0 +1,245 @@
+[
+  {
+    "code": "BINA",
+    "name": "Bina Junction",
+    "distance_km": 0.0,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "KIKA",
+    "name": "Kurwai Kethora",
+    "distance_km": 8.4,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "MABA",
+    "name": "Mandi Bamora",
+    "distance_km": 17.2,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "KLH",
+    "name": "Kulhar",
+    "distance_km": 26.0,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "BET",
+    "name": "Bareth",
+    "distance_km": 35.8,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "BAQ",
+    "name": "Ganj Basoda",
+    "distance_km": 45.6,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "PBI",
+    "name": "Pabai",
+    "distance_km": 54.5,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "GLG",
+    "name": "GulabGanj",
+    "distance_km": 62.4,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "SUMR",
+    "name": "Sumer",
+    "distance_km": 70.3,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "SORI",
+    "name": "Sorai",
+    "distance_km": 78.8,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "BHS",
+    "name": "Vidisha",
+    "distance_km": 85.0,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "DWG",
+    "name": "DewanGanj",
+    "distance_km": 94.2,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "SMT",
+    "name": "Salamatpur",
+    "distance_km": 100.8,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "SCI",
+    "name": "Sanchi",
+    "distance_km": 108.5,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "SUW",
+    "name": "Sukhi Sewaniyan",
+    "distance_km": 123.6,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "NSZ",
+    "name": "Nishatpura Junction",
+    "distance_km": 134.2,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "BPL",
+    "name": "Bhopal Junction",
+    "distance_km": 139.0,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "COMMISSIONED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "RKMP",
+    "name": "Rani Kamlapati",
+    "distance_km": 145.4,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "COMMISSIONED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "MSO",
+    "name": "Misrod",
+    "distance_km": 151.7,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "MDDP",
+    "name": "Mandideep",
+    "distance_km": 158.5,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "ODG",
+    "name": "Obaidulla Ganj",
+    "distance_km": 171.8,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "BKA",
+    "name": "Barkhera",
+    "distance_km": 181.2,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "IN_TRIALS",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "MDG",
+    "name": "Midghat",
+    "distance_km": 189.5,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "IN_TRIALS",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "CHC",
+    "name": "Chokardi",
+    "distance_km": 196.2,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "IN_TRIALS",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "BNI",
+    "name": "Budni",
+    "distance_km": 205.8,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "IN_TRIALS",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "NDPM",
+    "name": "Narmadapuram",
+    "distance_km": 213.6,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  },
+  {
+    "code": "ET",
+    "name": "Itarsi Junction",
+    "distance_km": 231.5,
+    "division": "BPL",
+    "zone": "WCR",
+    "kavach_status": "NOT_EQUIPPED",
+    "line_type": "DOUBLE"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "name": "line-clear",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AI-powered Railway Block Scheduling & Arbitration System — SIH 2026",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "cd backend && uvicorn app.main:app --reload --port 8000",
+    "dev:frontend": "cd frontend && npx vite --port 5173",
+    "install:all": "pip install -r backend/requirements.txt && cd frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
