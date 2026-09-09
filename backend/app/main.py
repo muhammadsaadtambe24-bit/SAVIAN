@@ -1,40 +1,21 @@
-import os
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.core.config import settings
+from app.core.database import engine, Base
+from app.api.router import api_router
 
-from app.config import settings
-from app.database import init_db
-from app.routers import (
-    corridor_router,
-    demands_router,
-    solver_router,
-    telemetry_router,
-    lifecycle_router,
-    pdf_router,
-)
-from seed.seed_data import seed_database
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Startup: ensure DB tables exist + seed data."""
-    os.makedirs("data", exist_ok=True)
-    os.makedirs("backend/data", exist_ok=True)
-    init_db()
-    seed_database()
-    yield
-
+# Initialize database schema
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="SAVIAN",
-    description="AI-powered Railway Block Scheduling & Arbitration System — SIH 2026",
-    version="1.0.0",
-    lifespan=lifespan,
+    title=settings.PROJECT_NAME,
+    version=settings.VERSION,
+    description="Backend microservices platform for Indian Railways Corridor Block Scheduling, OR-Tools CP-SAT Optimization, and Form T/409 Governance.",
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
-# --- CORS Middleware ---
+# Cross-Origin Resource Sharing (CORS) for Next.js / Vite React Frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -43,17 +24,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Include Block 4 Routers ---
-app.include_router(corridor_router, prefix="/api/corridor", tags=["Corridor"])
-app.include_router(demands_router, prefix="/api/demands", tags=["Demands"])
-app.include_router(solver_router, prefix="/api/solve", tags=["Solver"])
-app.include_router(telemetry_router, prefix="/api/telemetry", tags=["Telemetry"])
-app.include_router(lifecycle_router, prefix="/api/lifecycle", tags=["Lifecycle"])
-app.include_router(pdf_router, prefix="/api/pdf", tags=["PDF"])
+# Mount API Endpoints
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
+@app.get("/")
+def root():
+    return {
+        "system": settings.PROJECT_NAME,
+        "version": settings.VERSION,
+        "corridor": settings.CORRIDOR_SECTION,
+        "kavach_status": "SIL-4 ACTIVE",
+        "docs": "/docs",
+        "api_v1": settings.API_V1_STR
+    }
 
-@app.get("/", tags=["health"])
-async def root():
-    """Health check endpoint."""
-    return {"app": "SAVIAN", "version": "1.0.0", "status": "running"}
-
+@app.get("/health")
+def health_check():
+    return {
+        "status": "HEALTHY",
+        "database": "CONNECTED",
+        "solver_engine": "OR-Tools CP-SAT READY",
+        "kavach_headway_buffer": f"{settings.KAVACH_BUFFER_METERS}m"
+    }

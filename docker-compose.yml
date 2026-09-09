@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # 1. NGINX API Gateway (Auth, Rate Limiting, Routing)
+  api-gateway:
+    image: nginx:alpine
+    container_name: savian-api-gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    restart: always
+
+  # 2. Arbitration Backend — FastAPI & Google OR-Tools
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: savian-fastapi-backend
+    environment:
+      - DATABASE_URL=postgresql://savian_user:savian_secret@db:5432/savian_corridor
+      - CORRIDOR_SECTION=BINA-ITARSI
+      - KAVACH_BUFFER_METERS=1200
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: always
+
+  # 3. PostgreSQL Database & RDSO Immutable Audit Ledger
+  db:
+    image: postgres:15-alpine
+    container_name: savian-postgres-db
+    environment:
+      POSTGRES_USER: savian_user
+      POSTGRES_PASSWORD: savian_secret
+      POSTGRES_DB: savian_corridor
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  # 4. Frontend Cockpit UI (Next.js / Vite React D3.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: savian-frontend-cockpit
+    ports:
+      - "5173:5173"
+    restart: always
+
+volumes:
+  postgres_data:

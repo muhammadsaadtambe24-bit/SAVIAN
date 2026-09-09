@@ -12,6 +12,8 @@ venv/
 
 # Data
 backend/data/
+*.db
+*.sqlite*
 
 # Env
 .env
