@@ -117,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div>
                 <div className="flex items-center space-x-1.5">
                   <span className="font-extrabold text-base tracking-tight text-stone-800 font-sans">
-                    SAVIAN
+                    Line-Clear
                   </span>
                   <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200 animate-pulse" />
                 </div>
