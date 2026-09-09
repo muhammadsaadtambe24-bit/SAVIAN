@@ -85,7 +85,7 @@ export const App: React.FC = () => {
   const navMeta = getNavTitle();
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#f5f3ec] text-stone-800 font-sans">
       {/* 1. Left Sidebar (Fixed / Desktop w-64, Drawer on Mobile) */}
       <Sidebar
         activeNav={activeNav}
@@ -111,7 +111,8 @@ export const App: React.FC = () => {
         />
 
         {/* Center Main Content Area (Scrollable) */}
-        <main className="flex-1 overflow-y-auto bg-slate-950 p-4 sm:p-6 railway-grid">
+        <main className="flex-1 overflow-y-auto bg-[#f5f3ec] p-4 sm:p-6">
+
           <div className="mx-auto max-w-7xl">
             {activeNav === 'dashboard' && (
               <DashboardView

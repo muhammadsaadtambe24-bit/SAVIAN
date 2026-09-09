@@ -22,15 +22,15 @@ export interface StatusBarProps {
 export const StatusBar: React.FC<StatusBarProps> = ({
   isConnected = true,
   onToggleConnection,
-  activeSessionId = 'SOLV-2026-BPL-0941',
+  activeSessionId = 'SOLV-2026-BPL-2061',
   lastSolveTime = '19:42:08 IST',
-  solveDurationSec = 1.84,
+  solveDurationSec = 1.8,
   optimalityGap = 0.0,
 }) => {
   return (
     <footer
       id="system-status-bar"
-      className="sticky bottom-0 z-30 flex h-8 w-full items-center justify-between border-t border-slate-800 bg-slate-900/90 px-4 text-xs text-slate-400 backdrop-blur-md font-mono select-none"
+      className="sticky bottom-0 z-30 flex h-9 w-full items-center justify-between border-t border-[#e3ded2] bg-[#faf8f3]/95 px-4 text-xs text-stone-500 backdrop-blur-md font-mono select-none shadow-[0_-2px_12px_rgba(180,170,155,0.06)]"
     >
       {/* Left: Connection Status Indicator */}
       <div className="flex items-center space-x-4">
@@ -38,58 +38,55 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           type="button"
           onClick={onToggleConnection}
           className="flex items-center space-x-2 group focus:outline-none"
-          title={isConnected ? 'Connected to Railway Control Hub (Click to test disconnect)' : 'Disconnected (Click to reconnect)'}
+          title={isConnected ? 'Connected to Railway Control Hub' : 'Disconnected'}
         >
-          <span className="relative flex h-2.5 w-2.5">
+          <span className="relative flex h-2 w-2">
             {isConnected ? (
               <>
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 signal-green" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </>
             ) : (
-              <>
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500 opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-500 signal-red" />
-              </>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500" />
             )}
           </span>
 
           <span
             className={cn(
-              'text-[11px] font-semibold tracking-wider transition-colors',
-              isConnected ? 'text-emerald-400 group-hover:text-emerald-300' : 'text-rose-400 group-hover:text-rose-300'
+              'text-[11px] font-bold tracking-wider transition-colors',
+              isConnected ? 'text-emerald-800' : 'text-rose-600'
             )}
           >
             {isConnected ? 'HUB CONNECTED' : 'OFFLINE'}
           </span>
 
           {isConnected ? (
-            <Wifi className="h-3 w-3 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+            <Wifi className="h-3 w-3 text-emerald-600" />
           ) : (
-            <WifiOff className="h-3 w-3 text-rose-400" />
+            <WifiOff className="h-3 w-3 text-rose-500" />
           )}
         </button>
 
-        <span className="text-slate-700 hidden sm:inline">|</span>
+        <span className="text-stone-300 hidden sm:inline">|</span>
 
         {/* Corridor Section */}
-        <div className="hidden sm:flex items-center space-x-1.5 text-slate-400 text-[11px]">
-          <Radio className="h-3 w-3 text-blue-400" />
-          <span>WCR/BPL: BINA – ET (152.4 KM)</span>
+        <div className="hidden sm:flex items-center space-x-1.5 text-stone-600 text-[11px]">
+          <Radio className="h-3 w-3 text-emerald-600" />
+          <span>WCR/BPL: BINA - ET (152.4 KM)</span>
         </div>
       </div>
 
       {/* Center: Current Solve Session ID */}
       <div className="flex items-center space-x-2 text-[11px]">
-        <div className="flex items-center space-x-1.5 bg-slate-950/70 border border-slate-800 rounded px-2 py-0.5">
-          <Cpu className="h-3 w-3 text-blue-400" />
-          <span className="text-slate-400 font-sans text-[10px] uppercase">Session:</span>
+        <div className="flex items-center space-x-1.5 neumorphic-inset rounded-lg px-2.5 py-0.5">
+          <Cpu className="h-3 w-3 text-stone-500" />
+          <span className="text-stone-500 font-sans text-[10px] uppercase font-bold">SESSION:</span>
           {activeSessionId ? (
-            <span className="text-blue-300 font-bold tracking-tight">
+            <span className="text-stone-800 font-bold tracking-tight">
               {activeSessionId}
             </span>
           ) : (
-            <span className="text-slate-500 italic">No Active Session</span>
+            <span className="text-stone-400 italic">No Active Session</span>
           )}
         </div>
       </div>
@@ -97,28 +94,32 @@ export const StatusBar: React.FC<StatusBarProps> = ({
       {/* Right: Last Solve Metrics */}
       <div className="flex items-center space-x-3 text-[11px]">
         {lastSolveTime && (
-          <div className="flex items-center space-x-1.5 text-slate-400">
-            <Clock className="h-3 w-3 text-slate-500" />
-            <span className="hidden md:inline text-slate-500 font-sans text-[10px]">LAST SOLVE:</span>
-            <span className="text-slate-300">{lastSolveTime}</span>
+          <div className="flex items-center space-x-1.5 text-stone-600">
+            <Clock className="h-3 w-3 text-stone-400" />
+            <span className="hidden md:inline text-stone-500 font-sans text-[10px]">LAST SOLVE:</span>
+            <span className="text-stone-800 font-medium">{lastSolveTime}</span>
             {solveDurationSec !== null && (
-              <span className="text-emerald-400 text-[10px]">
+              <span className="text-emerald-800 text-[10px] font-bold">
                 ({solveDurationSec}s)
               </span>
             )}
           </div>
         )}
 
+        <span className="text-stone-300 hidden md:inline">|</span>
+
         {optimalityGap !== null && (
-          <div className="hidden lg:flex items-center space-x-1 bg-slate-950/60 border border-slate-800/80 px-1.5 py-0.5 rounded text-[10px] text-slate-400">
-            <GitCommit className="h-2.5 w-2.5 text-blue-400" />
+          <div className="hidden lg:flex items-center space-x-1 text-[10px] text-stone-600">
+            <GitCommit className="h-2.5 w-2.5 text-stone-400" />
             <span>Gap: {optimalityGap.toFixed(2)}%</span>
           </div>
         )}
 
-        <div className="hidden xl:flex items-center space-x-1 text-[10px] text-slate-500">
-          <Activity className="h-3 w-3 text-emerald-400" />
-          <span>12ms</span>
+        <span className="text-stone-300 hidden md:inline">|</span>
+
+        <div className="hidden xl:flex items-center space-x-1 text-[10px] text-stone-500">
+          <Activity className="h-3 w-3 text-emerald-600" />
+          <span>12ms ping</span>
         </div>
       </div>
     </footer>

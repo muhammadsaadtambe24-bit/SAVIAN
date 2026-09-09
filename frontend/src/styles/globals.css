@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
-    --radius: 0.5rem;
+    --background: 45 25% 95%;
+    --foreground: 28 20% 18%;
+    --card: 45 28% 98%;
+    --card-foreground: 28 20% 18%;
+    --popover: 45 28% 98%;
+    --popover-foreground: 28 20% 18%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 18% 92%;
+    --secondary-foreground: 28 20% 18%;
+    --muted: 40 18% 92%;
+    --muted-foreground: 30 10% 45%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 18% 88%;
+    --input: 40 18% 88%;
+    --ring: 160 84% 39%;
+    --radius: 1rem;
   }
 }
 
@@ -32,6 +32,50 @@
     @apply border-border;
   }
   body {
-    @apply bg-slate-950 text-slate-100;
+    @apply bg-[#f5f3ec] text-stone-800 antialiased selection:bg-emerald-100 selection:text-emerald-900;
   }
+}
+
+/* Warm Neumorphic Extrusion System */
+.neumorphic-card {
+  background: #fbf9f4;
+  border: 1px solid rgba(225, 220, 210, 0.75);
+  box-shadow: 
+    6px 6px 16px rgba(180, 170, 155, 0.22),
+    -4px -4px 14px rgba(255, 255, 255, 0.9);
+}
+
+.neumorphic-card-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neumorphic-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(215, 205, 195, 0.95);
+  box-shadow: 
+    8px 10px 22px rgba(170, 160, 145, 0.28),
+    -5px -5px 16px rgba(255, 255, 255, 1);
+}
+
+.neumorphic-inset {
+  background: #ede9df;
+  border: 1px solid rgba(220, 212, 200, 0.85);
+  box-shadow: 
+    inset 3px 3px 6px rgba(175, 165, 150, 0.22),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.85);
+}
+
+.neumorphic-pill {
+  background: #fbf9f4;
+  border: 1px solid rgba(225, 220, 210, 0.8);
+  box-shadow: 
+    3px 3px 8px rgba(180, 170, 155, 0.18),
+    -2px -2px 6px rgba(255, 255, 255, 0.9);
+}
+
+.mint-glow-pill {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+  border: 1px solid rgba(110, 231, 183, 0.8);
+  box-shadow: 
+    0 2px 10px rgba(16, 185, 129, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }

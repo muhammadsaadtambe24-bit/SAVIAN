@@ -15,7 +15,6 @@ import { Badge } from '@/components/ui/badge';
 
 export type NavItemKey = 'dashboard' | 'marey' | 'demands' | 'solver' | 'lifecycle' | 'settings';
 
-
 interface SidebarProps {
   activeNav: NavItemKey;
   onSelectNav: (key: NavItemKey) => void;
@@ -38,7 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectNav,
   mobileOpen,
   onCloseMobile,
-  demandCount = 14,
+  demandCount = 5,
   activeClashes = 0,
 }) => {
   const navItems: NavItemConfig[] = [
@@ -58,7 +57,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       key: 'demands',
       label: 'Demands',
       icon: FileText,
-
       badge: demandCount > 0 ? demandCount : undefined,
       badgeVariant: 'warning',
     },
@@ -86,68 +84,82 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-stone-900/40 backdrop-blur-sm lg:hidden transition-opacity"
           onClick={onCloseMobile}
           aria-hidden="true"
         />
       )}
 
-      {/* Sidebar container */}
+      {/* Sidebar container - Warm Neumorphic Cream */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-slate-900 border-r border-slate-800/80 transition-transform duration-300 ease-in-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-[#f7f5ef] border-r border-[#e3dfd3] shadow-[4px_0_24px_rgba(180,170,155,0.14)] transition-transform duration-300 ease-in-out lg:translate-x-0',
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        {/* Brand Header */}
-        <div className="flex h-14 items-center justify-between px-4 border-b border-slate-800/80 bg-slate-900/95">
-          <div className="flex items-center space-x-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-blue-700 to-indigo-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.45)] border border-blue-400/30">
-              <Train className="h-5 w-5 text-blue-100" />
-            </div>
-            <div>
-              <div className="flex items-center space-x-1.5">
-                <span className="font-extrabold text-base tracking-wider text-white font-mono">
-                  SAVIAN
-                </span>
-                <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+        {/* Brand Card (Top) with Bholu Mascot */}
+        <div className="p-4 border-b border-[#e6e2d6] bg-[#faf8f3]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3.5">
+              {/* Elevated squircle holding mascot */}
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ffffff] p-1.5 shadow-[4px_4px_10px_rgba(180,170,155,0.22),-3px_-3px_8px_rgba(255,255,255,0.95)] border border-[rgba(230,225,215,0.9)] overflow-hidden">
+                <img
+                  src="/bholu.jpg"
+                  alt="Bholu the Guard Elephant"
+                  className="h-full w-full object-contain object-center scale-105"
+                  onError={(e) => {
+                    // Fallback to train icon if image missing
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                />
               </div>
-              <p className="text-[10px] tracking-wider uppercase font-semibold text-blue-400/90 font-mono">
-                IR Block Scheduling AI
-              </p>
-            </div>
-          </div>
 
-          {/* Close button on mobile */}
-          <button
-            type="button"
-            className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white lg:hidden"
-            onClick={onCloseMobile}
-          >
-            <X className="h-5 w-5" />
-          </button>
+              <div>
+                <div className="flex items-center space-x-1.5">
+                  <span className="font-extrabold text-base tracking-tight text-stone-800 font-sans">
+                    SAVIAN
+                  </span>
+                  <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200 animate-pulse" />
+                </div>
+                <p className="text-[10px] tracking-wider uppercase font-semibold text-stone-500 font-mono">
+                  IR BLOCK SCHEDULING AI
+                </p>
+              </div>
+            </div>
+
+            {/* Close button on mobile */}
+            <button
+              type="button"
+              className="rounded-xl p-1.5 text-stone-400 hover:bg-[#eae6db] hover:text-stone-700 lg:hidden"
+              onClick={onCloseMobile}
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
-        {/* Corridor Context Pill */}
-        <div className="mx-3 mt-3.5 mb-1 px-3 py-2 rounded-md bg-slate-950/60 border border-slate-800/80">
-          <div className="flex items-center justify-between text-[11px] font-medium text-slate-400">
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <Radio className="h-3 w-3 text-blue-400" />
+        {/* Corridor Metadata Pill (Inset Container) */}
+        <div className="mx-3.5 mt-3.5 mb-1 px-3 py-2 rounded-xl neumorphic-inset">
+          <div className="flex items-center justify-between text-[11px] font-semibold text-stone-700">
+            <span className="flex items-center gap-1.5 text-stone-800">
+              <Radio className="h-3 w-3 text-emerald-600" />
               BINA – ET SECTION
             </span>
-            <span className="font-mono text-blue-400 text-[10px]">WCR / BPL</span>
+            <span className="font-mono text-emerald-800 text-[10px] bg-emerald-100/70 px-1.5 py-0.5 rounded-md border border-emerald-300/60 font-bold">
+              WCR / BPL
+            </span>
           </div>
-          <div className="mt-1 flex items-center justify-between text-[10px] text-slate-400">
+          <div className="mt-1 flex items-center justify-between text-[10px] text-stone-500 font-medium">
             <span>152.4 km • Double Track</span>
-            <span className="text-emerald-400 flex items-center gap-1">
-              <ShieldCheck className="h-3 w-3" /> Kavach
+            <span className="text-emerald-700 flex items-center gap-1 font-semibold">
+              <ShieldCheck className="h-3 w-3 text-emerald-600" /> Kavach
             </span>
           </div>
         </div>
 
-        {/* Navigation Items */}
-        <nav className="flex-1 space-y-1.5 px-3 py-4 overflow-y-auto">
-          <div className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-300 font-mono">
+        {/* Navigation */}
+        <nav className="flex-1 space-y-1.5 px-3 py-3 overflow-y-auto">
+          <div className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-stone-400 font-mono">
             Navigation
           </div>
           {navItems.map((item) => {
@@ -164,48 +176,54 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onCloseMobile();
                 }}
                 className={cn(
-                  'group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
+                  'group flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-blue-600/20 text-blue-400 font-semibold border-r-2 border-blue-500 shadow-sm'
-                    : 'text-slate-300 hover:bg-slate-800/70 hover:text-slate-100'
+                    ? 'mint-glow-pill text-emerald-900 font-bold'
+                    : 'text-stone-600 hover:bg-[#ede9df] hover:text-stone-900'
                 )}
               >
                 <div className="flex items-center space-x-3">
                   <Icon
                     className={cn(
                       'h-4 w-4 transition-colors',
-                      isActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-slate-200'
+                      isActive ? 'text-emerald-700' : 'text-stone-400 group-hover:text-stone-600'
                     )}
                   />
                   <span>{item.label}</span>
                 </div>
 
                 {item.badge && (
-                  <Badge
-                    variant={isActive ? 'railway' : 'secondary'}
-                    className="text-[10px] px-1.5 py-0 h-4"
+                  <span
+                    className={cn(
+                      'text-[10px] px-2 py-0.5 rounded-full font-mono font-bold',
+                      isActive
+                        ? 'bg-emerald-200/90 text-emerald-950 border border-emerald-300/70'
+                        : 'bg-[#e4decfa0] text-stone-600 group-hover:bg-[#dad3c3]'
+                    )}
                   >
                     {item.badge}
-                  </Badge>
+                  </span>
                 )}
               </button>
             );
           })}
         </nav>
 
-        {/* System Diagnostics / Mini Status in Footer */}
-        <div className="p-3 border-t border-slate-800/80 bg-slate-950/40">
-          <div className="rounded-md bg-slate-900/90 border border-slate-800 p-2.5 text-xs">
-            <div className="flex items-center justify-between text-[11px] mb-1">
-              <span className="text-slate-400 font-medium">Solver Engine</span>
-              <span className="text-emerald-400 font-mono text-[10px] font-bold">CP-SAT 9.8</span>
+        {/* Footer Diagnostics (Inset Box) */}
+        <div className="p-3.5 border-t border-[#e6e2d6] bg-[#faf8f3]">
+          <div className="rounded-xl neumorphic-inset p-3 text-xs space-y-1.5">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="text-stone-500 font-medium">Solver Engine</span>
+              <span className="text-emerald-800 font-mono text-[10px] font-bold bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300">
+                CP-SAT 9.8
+              </span>
             </div>
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-400 font-medium">Headway Guard</span>
-              <span className="text-blue-400 font-mono text-[10px]">7 min (Normal)</span>
+              <span className="text-stone-500 font-medium">Headway Guard</span>
+              <span className="text-stone-700 font-mono text-[10px] font-semibold">7 min (Normal)</span>
             </div>
           </div>
-          <div className="mt-2 text-center text-[10px] text-slate-300 font-mono">
+          <div className="mt-2 text-center text-[10px] text-stone-400 font-mono">
             Indian Railways • AI DSS v1.0
           </div>
         </div>
