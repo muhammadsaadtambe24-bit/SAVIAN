@@ -28,20 +28,64 @@ export const STRIP_STATIONS: StationNode[] = [
   { code: 'ET', shortCode: 'ET', name: 'Itarsi Jn', km: 155.4, topKm: '155.0', status: 'green' },
 ];
 
+// Persistent session start timestamp to ensure the train position stays continuous across navigation
+const SESSION_START_TIME = typeof window !== 'undefined' 
+  ? (window as any).__STRIP_TRAIN_SESSION_START || ((window as any).__STRIP_TRAIN_SESSION_START = Date.now())
+  : Date.now();
+
+const TOTAL_LOOP_SECONDS = 480; // 240s one-way, 480s round trip
+
 export const TrackStripMap: React.FC = () => {
-  // State for direction tracking (1 = BINA -> ET, -1 = ET -> BINA)
-  const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
+  const [trainLeftPct, setTrainLeftPct] = useState<number>(1);
+  const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [activeStationIndex, setActiveStationIndex] = useState(0);
 
   useEffect(() => {
-    // Exactly 20 seconds to cross each station node in the UI
-    const interval = setInterval(() => {
-      setActiveStationIndex((prev) => (prev + 1) % STRIP_STATIONS.length);
-    }, 20000);
+    // Continuously compute train position and station index based on wall-clock elapsed time
+    const updatePosition = () => {
+      const elapsedSeconds = ((Date.now() - SESSION_START_TIME) / 1000) % TOTAL_LOOP_SECONDS;
+      const halfLoop = TOTAL_LOOP_SECONDS / 2; // 240s
+
+      let progress: number; // 0 to 1
+      let flipped: boolean;
+
+      if (elapsedSeconds < halfLoop) {
+        // Forward: BINA (1%) -> ET (89%)
+        progress = elapsedSeconds / halfLoop;
+        flipped = false;
+        // Station index forward (0 to 12)
+        const stIndex = Math.min(
+          STRIP_STATIONS.length - 1,
+          Math.floor((elapsedSeconds / halfLoop) * STRIP_STATIONS.length)
+        );
+        setActiveStationIndex(stIndex);
+      } else {
+        // Return: ET (89%) -> BINA (1%)
+        progress = 1 - (elapsedSeconds - halfLoop) / halfLoop;
+        flipped = true;
+        // Station index return (12 down to 0)
+        const stIndex = Math.max(
+          0,
+          STRIP_STATIONS.length - 1 - Math.floor(((elapsedSeconds - halfLoop) / halfLoop) * STRIP_STATIONS.length)
+        );
+        setActiveStationIndex(stIndex);
+      }
+
+      // Exact position between 1% and 89%
+      const currentPos = 1 + progress * (89 - 1);
+      setTrainLeftPct(currentPos);
+      setIsFlipped(flipped);
+    };
+
+    // Run immediately upon mounting so there is zero jump
+    updatePosition();
+
+    // High refresh rate (60fps) for silky smooth continuous motion
+    const interval = setInterval(updatePosition, 50);
     return () => clearInterval(interval);
   }, []);
 
-  const currentStation = STRIP_STATIONS[activeStationIndex];
+  const currentStation = STRIP_STATIONS[activeStationIndex] || STRIP_STATIONS[0];
 
   return (
     <div className="neumorphic-card neumorphic-card-hover rounded-2xl p-5 space-y-4">
@@ -130,32 +174,16 @@ export const TrackStripMap: React.FC = () => {
         {/* Bottom Rail */}
         <div className="absolute top-[154px] left-5 right-5 h-[2px] bg-[#cbc5b4] z-0" />
 
-        {/* Animated Train Locomotive Moving Along 3 Track Lines (takes exactly 20 sec to cross between each station node in the UI: 240s one-way, 480s round-trip) */}
-        <motion.div
-          className="absolute top-[131px] z-30 flex flex-col items-center pointer-events-none"
-          initial={{ left: '1%' }}
-          animate={{
-            left: ['1%', '89%', '89%', '1%', '1%'],
-          }}
-          transition={{
-            duration: 480, // Exactly 20s per station in the UI
-            repeat: Infinity,
-            ease: 'linear',
-            times: [0, 0.48, 0.50, 0.98, 1],
-          }}
+        {/* Animated Train Locomotive Moving Along 3 Track Lines (Persistent Wall-Clock Continuous Loop) */}
+        <div
+          className="absolute top-[131px] z-30 flex flex-col items-center pointer-events-none transition-[left] duration-75 ease-linear"
+          style={{ left: `${trainLeftPct}%` }}
         >
           {/* Realistic Train Engine Moving Directly On The 3 Track Lines */}
           {/* Natively points RIGHT when moving forward (scaleX: 1) and MIRRORS to point LEFT when moving backward (scaleX: -1) */}
-          <motion.div
-            className="relative flex items-center"
-            animate={{
-              scaleX: [1, 1, -1, -1, 1],
-            }}
-            transition={{
-              duration: 480,
-              repeat: Infinity,
-              times: [0, 0.48, 0.50, 0.98, 1],
-            }}
+          <div
+            className="relative flex items-center transition-transform duration-300"
+            style={{ transform: isFlipped ? 'scaleX(-1)' : 'scaleX(1)' }}
           >
             {/* Soft Luminescent Trail behind train (always behind train's rear) */}
             <div className="absolute right-full mr-1 flex items-center gap-1 opacity-80 pointer-events-none">
@@ -213,8 +241,8 @@ export const TrackStripMap: React.FC = () => {
                 </defs>
               </svg>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
         {/* Station Nodes Layout (Evenly Spaced Across Full Width) */}
         <div className="relative z-10 flex justify-between items-start w-full">
           {STRIP_STATIONS.map((st) => {
