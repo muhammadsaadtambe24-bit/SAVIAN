@@ -66,29 +66,32 @@ export const MareyView: React.FC<MareyViewProps> = ({
         </div>
       )}
 
-      {/* Corridor Summary Pills */}
+      {/* Corridor Summary Pills - Matched with Marey Chart Aesthetic */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
-          <div className="text-[11px] text-slate-400">Total Route Span</div>
-          <div className="text-lg font-bold font-mono text-white mt-0.5">231.5 KM</div>
-          <div className="text-[10px] text-slate-500">BINA Jn (0.0k) → ET Jn (231.5k)</div>
+        <div className="rounded-xl border border-slate-700/80 bg-slate-950 p-3.5 shadow-lg shadow-black/20">
+          <div className="text-[11px] font-medium text-slate-400">Total Route Span</div>
+          <div className="text-xl font-black font-mono text-white mt-1 tracking-tight">231.5 KM</div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">BINA Jn (0.0k) → ET Jn (231.5k)</div>
         </div>
-        <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
-          <div className="text-[11px] text-slate-400">Corridor Stations</div>
-          <div className="text-lg font-bold font-mono text-blue-400 mt-0.5">27 Stations</div>
-          <div className="text-[10px] text-slate-500">26 Contiguous Block Sections</div>
+
+        <div className="rounded-xl border border-blue-900/60 bg-slate-950 p-3.5 shadow-lg shadow-black/20">
+          <div className="text-[11px] font-medium text-slate-400">Corridor Stations</div>
+          <div className="text-xl font-black font-mono text-sky-400 mt-1 tracking-tight">27 Stations</div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">26 Contiguous Block Sections</div>
         </div>
-        <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
-          <div className="text-[11px] text-slate-400">Scheduled Trains</div>
-          <div className="text-lg font-bold font-mono text-emerald-400 mt-0.5">12 Paths</div>
-          <div className="text-[10px] text-slate-500">Rajdhani, VB, Exp, Mail, MEMU, Freight</div>
+
+        <div className="rounded-xl border border-emerald-900/60 bg-slate-950 p-3.5 shadow-lg shadow-black/20">
+          <div className="text-[11px] font-medium text-slate-400">Scheduled Trains</div>
+          <div className="text-xl font-black font-mono text-emerald-400 mt-1 tracking-tight">12 Paths</div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">Rajdhani, VB, Exp, Mail, Freight</div>
         </div>
-        <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
-          <div className="text-[11px] text-slate-400">Maintenance Possessions</div>
-          <div className="text-lg font-bold font-mono text-amber-400 mt-0.5">
-            8 Blocks <span className="text-xs font-normal text-slate-400">({shadowBlocksCount} shadow)</span>
+
+        <div className="rounded-xl border border-amber-900/60 bg-slate-950 p-3.5 shadow-lg shadow-black/20">
+          <div className="text-[11px] font-medium text-slate-400">Maintenance Possessions</div>
+          <div className="text-xl font-black font-mono text-amber-400 mt-1 tracking-tight">
+            8 Blocks <span className="text-xs font-normal text-slate-400 font-sans">({shadowBlocksCount} shadow)</span>
           </div>
-          <div className="text-[10px] text-slate-500">P-Way, OHE, S&T Integrated</div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">P-Way, OHE, S&T Integrated</div>
         </div>
       </div>
 
