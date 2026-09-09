@@ -98,6 +98,21 @@ export const MareyChart: React.FC<MareyChartProps> = ({
   const [selectedTrainTypes, setSelectedTrainTypes] = useState<Set<TrainType>>(
     new Set<TrainType>(['RAJDHANI', 'VANDE_BHARAT', 'EXPRESS', 'MAIL', 'PASSENGER', 'FREIGHT'])
   );
+
+  // Live moving corridor current time (ticking every second)
+  const [liveCorridorMinute, setLiveCorridorMinute] = useState<number>(() => {
+    const now = new Date();
+    return (now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60) % 1440;
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setLiveCorridorMinute((now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60) % 1440);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const [selectedDepartments, setSelectedDepartments] = useState<Set<BlockDepartment>>(
     new Set<BlockDepartment>(['P_WAY', 'OHE', 'S_AND_T'])
   );
@@ -536,6 +551,51 @@ export const MareyChart: React.FC<MareyChartProps> = ({
                   pointerEvents="none"
                 />
               )}
+
+              {/* LIVE MOVING CORRIDOR CURRENT-TIME LINE */}
+              {(() => {
+                const liveX = currentScaleX(liveCorridorMinute);
+                if (liveX < 0 || liveX > innerWidth) return null;
+                return (
+                  <g className="live-corridor-clock-indicator pointer-events-none z-30">
+                    <line
+                      x1={liveX}
+                      y1={0}
+                      x2={liveX}
+                      y2={innerHeight}
+                      stroke="#10b981"
+                      strokeWidth={2}
+                      strokeDasharray="4 2"
+                      strokeOpacity={0.85}
+                    />
+                    {/* Top flag capsule */}
+                    <rect
+                      x={liveX - 32}
+                      y={-22}
+                      width={64}
+                      height={18}
+                      rx={5}
+                      fill="#059669"
+                      stroke="#34d399"
+                      strokeWidth={1}
+                    />
+                    <text
+                      x={liveX}
+                      y={-10}
+                      fill="#ffffff"
+                      fontSize={9}
+                      fontWeight="bold"
+                      fontFamily="monospace"
+                      textAnchor="middle"
+                    >
+                      {formatMinutesToHHMM(Math.floor(liveCorridorMinute))} IST
+                    </text>
+                    {/* Bottom pulse beacon */}
+                    <circle cx={liveX} cy={innerHeight} r={3.5} fill="#34d399" />
+                    <circle cx={liveX} cy={innerHeight} r={7} fill="#34d399" opacity={0.4} className="animate-ping" />
+                  </g>
+                );
+              })()}
             </g>
 
             {/* LAYER 3: Station Labels on Left (Y-Axis) */}

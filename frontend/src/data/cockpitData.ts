@@ -1,4 +1,4 @@
-import type { SolverResult, XAIData } from './types';
+import type { SolverResult, XAIData } from '../types/cockpit';
 
 export const mockSolverResult: SolverResult = {
   blocks: [

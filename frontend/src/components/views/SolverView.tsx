@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Cpu,
   Play,
@@ -18,6 +18,8 @@ interface SolverViewProps {
   onRunSolver: () => void;
   solverResult?: SolverResult;
   telemetryData?: TelemetryEvent[];
+  solvingPhase?: string;
+  solvingProgress?: number;
 }
 
 export const SolverView: React.FC<SolverViewProps> = ({
@@ -25,7 +27,11 @@ export const SolverView: React.FC<SolverViewProps> = ({
   onRunSolver,
   solverResult = MOCK_SOLVER_RESULT,
   telemetryData = MOCK_TELEMETRY,
+  solvingPhase = 'Phase 2: CP-SAT Boolean Headway Formulation...',
+  solvingProgress = 65,
 }) => {
+  const [highlightedTrain, setHighlightedTrain] = useState<string | null>(null);
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Top Banner Control Cockpit */}
@@ -51,7 +57,7 @@ export const SolverView: React.FC<SolverViewProps> = ({
               size="default"
               onClick={onRunSolver}
               disabled={solverStatus === 'solving'}
-              className="font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-[0_4px_12px_rgba(16,185,129,0.35)]"
+              className="font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-[0_4px_12px_rgba(16,185,129,0.35)] transition-all transform active:scale-95"
             >
               {solverStatus === 'solving' ? (
                 <>
@@ -60,7 +66,7 @@ export const SolverView: React.FC<SolverViewProps> = ({
                 </>
               ) : (
                 <>
-                  <Play className="mr-2 h-4 w-4 fill-current text-white" />
+                  <Play className="mr-1.5 h-4 w-4 fill-current text-white" />
                   Run AI Optimization
                 </>
               )}
@@ -68,14 +74,42 @@ export const SolverView: React.FC<SolverViewProps> = ({
           </div>
         </div>
 
+        {/* Live Solving Stage Visualizer (Shown when solving) */}
+        {solverStatus === 'solving' && (
+          <div className="mt-4 rounded-xl bg-amber-50/90 border border-amber-300/90 p-3.5 space-y-2 animate-in fade-in">
+            <div className="flex items-center justify-between text-xs font-mono font-bold text-amber-900">
+              <span className="flex items-center gap-2">
+                <RefreshCw className="h-3.5 w-3.5 animate-spin text-amber-600" />
+                {solvingPhase}
+              </span>
+              <span>{Math.round(solvingProgress)}%</span>
+            </div>
+            <div className="h-2 w-full bg-amber-200/80 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-amber-500 to-emerald-600 rounded-full transition-all duration-300"
+                style={{ width: `${solvingProgress}%` }}
+              />
+            </div>
+            <p className="text-[10px] text-amber-800/80 font-medium">
+              Formulating Boolean intervals, enforcing Kavach SIL-4 1,200m headway safety distance, and finding global optimum.
+            </p>
+          </div>
+        )}
+
         {/* Solver Metrics Strip - Warm Neumorphic Cards */}
         <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-4 border-t border-[#e8e2d4]">
           <div className="rounded-xl bg-white/90 p-3 border border-stone-200/90 shadow-sm">
             <span className="text-[10px] uppercase font-bold text-stone-400 font-mono">Solve Status</span>
             <div className="mt-1 flex items-center space-x-1.5">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  solverStatus === 'solving'
+                    ? 'bg-amber-500 animate-ping'
+                    : 'bg-emerald-500 animate-pulse'
+                }`}
+              />
               <span className="text-xs font-black text-emerald-800 font-mono">
-                {solverResult.status}
+                {solverStatus === 'solving' ? 'SOLVING' : solverResult.status}
               </span>
             </div>
           </div>
@@ -83,14 +117,18 @@ export const SolverView: React.FC<SolverViewProps> = ({
           <div className="rounded-xl bg-white/90 p-3 border border-stone-200/90 shadow-sm">
             <span className="text-[10px] uppercase font-bold text-stone-400 font-mono">Optimality Gap</span>
             <div className="mt-1 text-xs font-black text-sky-800 font-mono">
-              {solverResult.optimality_gap.toFixed(2)}%
+              {solverStatus === 'solving'
+                ? `${Math.max(0, 14.8 - (solvingProgress / 100) * 14.8).toFixed(2)}%`
+                : `${solverResult.optimality_gap.toFixed(2)}%`}
             </div>
           </div>
 
           <div className="rounded-xl bg-white/90 p-3 border border-stone-200/90 shadow-sm">
             <span className="text-[10px] uppercase font-bold text-stone-400 font-mono">Wall Time</span>
             <div className="mt-1 text-xs font-black text-stone-900 font-mono">
-              {solverResult.wall_time_sec}s
+              {solverStatus === 'solving'
+                ? `${((solvingProgress / 100) * 2.2).toFixed(2)}s`
+                : `${solverResult.wall_time_sec}s`}
             </div>
           </div>
 
@@ -128,9 +166,11 @@ export const SolverView: React.FC<SolverViewProps> = ({
                 Explainable AI (XAI) Decisions
               </h3>
             </div>
-            <span className="text-[10px] font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full border border-sky-300">
-              Constraint Logic
-            </span>
+            {highlightedTrain && (
+              <span className="text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full border border-amber-300 animate-pulse">
+                Filtered: {highlightedTrain.split('_')[0]}
+              </span>
+            )}
           </div>
 
           {/* Conflict Resolutions */}
@@ -139,30 +179,41 @@ export const SolverView: React.FC<SolverViewProps> = ({
               Resolved Schedule Shifts & Rationale
             </span>
             <div className="mt-2.5 space-y-2.5">
-              {solverResult.xai.conflict_resolutions.map((res, i) => (
-                <div
-                  key={i}
-                  className="rounded-xl bg-white/95 border border-stone-200/90 p-3.5 text-xs space-y-1.5 shadow-sm"
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-mono font-extrabold text-stone-900">
-                      {res.block_id}
-                    </span>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                        res.shifted_minutes > 0
-                          ? 'bg-amber-100 text-amber-900 border-amber-300'
-                          : 'bg-emerald-100 text-emerald-900 border-emerald-300'
-                      }`}
-                    >
-                      {res.shifted_minutes > 0 ? `+${res.shifted_minutes} min` : `${res.shifted_minutes} min`}
-                    </span>
+              {solverResult.xai.conflict_resolutions.map((res, i) => {
+                const isMatchingHighlighted =
+                  highlightedTrain &&
+                  (res.reason.includes(highlightedTrain.split('_')[0]) ||
+                    res.block_id.includes(highlightedTrain.split('_')[0]));
+
+                return (
+                  <div
+                    key={i}
+                    className={`rounded-xl border p-3.5 text-xs space-y-1.5 shadow-sm transition-all duration-200 ${
+                      isMatchingHighlighted
+                        ? 'bg-amber-50/90 border-amber-400 ring-2 ring-amber-400'
+                        : 'bg-white/95 border-stone-200/90'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-mono font-extrabold text-stone-900">
+                        {res.block_id}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                          res.shifted_minutes > 0
+                            ? 'bg-amber-100 text-amber-900 border-amber-300'
+                            : 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                        }`}
+                      >
+                        {res.shifted_minutes > 0 ? `+${res.shifted_minutes} min` : `${res.shifted_minutes} min`}
+                      </span>
+                    </div>
+                    <p className="text-stone-600 text-[11px] leading-relaxed font-medium">
+                      {res.reason}
+                    </p>
                   </div>
-                  <p className="text-stone-600 text-[11px] leading-relaxed font-medium">
-                    {res.reason}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -214,58 +265,93 @@ export const SolverView: React.FC<SolverViewProps> = ({
             </p>
 
             <div className="rounded-xl bg-[#ede9df] border border-[#dcd4c6] p-3.5 space-y-3 shadow-inner">
-              {telemetryData.map((event) => {
-                const gap = Math.abs(event.objective_cost - event.best_bound);
-                const progressPct = Math.max(10, 100 - (gap / event.objective_cost) * 100);
+              {telemetryData
+                .filter((_, idx) => {
+                  if (solverStatus !== 'solving') return true;
+                  const threshold = [15, 35, 55, 75, 95][idx] || 0;
+                  return solvingProgress >= threshold;
+                })
+                .map((event, i, arr) => {
+                  const gap = Math.abs(event.objective_cost - event.best_bound);
+                  const progressPct = Math.max(10, 100 - (gap / event.objective_cost) * 100);
+                  const isLatest = solverStatus === 'solving' && i === arr.length - 1;
+
+                  return (
+                    <div
+                      key={event.iteration}
+                      className={`space-y-1 transition-all duration-300 ${
+                        isLatest ? 'bg-amber-100/60 p-2 rounded-lg border border-amber-300' : ''
+                      }`}
+                    >
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-stone-600 font-bold flex items-center gap-1">
+                          {isLatest && <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-ping" />}
+                          Iter #{event.iteration}
+                        </span>
+                        <span className="text-stone-700 font-semibold">Cost: {event.objective_cost.toFixed(1)}</span>
+                        <span className="text-sky-800 font-semibold">Bound: {event.best_bound.toFixed(1)}</span>
+                        <span className="text-emerald-700 font-black">{event.time_sec}s</span>
+                      </div>
+                      <div className="h-2 w-full bg-[#d8d0c0] rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full transition-all duration-300"
+                          style={{ width: `${Math.min(100, progressPct)}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+
+          {/* Train Slot Adjustments Preview - Clickable to Cross-Highlight */}
+          <div className="pt-3 border-t border-[#e8e2d4]">
+            <div className="flex justify-between items-center mb-1.5">
+              <span className="text-xs font-bold text-stone-700">
+                Punctuality Schedule Impact (Bhopal Section)
+              </span>
+              <span className="text-[10px] text-stone-400">Click train to inspect rationale</span>
+            </div>
+
+            <div className="space-y-2">
+              {Object.entries(solverResult.train_schedules).map(([train, sched]) => {
+                const isSelected = highlightedTrain === train;
 
                 return (
-                  <div key={event.iteration} className="space-y-1">
-                    <div className="flex justify-between text-xs font-mono">
-                      <span className="text-stone-600 font-bold">Iter #{event.iteration}</span>
-                      <span className="text-stone-700 font-semibold">Cost: {event.objective_cost.toFixed(1)}</span>
-                      <span className="text-sky-800 font-semibold">Bound: {event.best_bound.toFixed(1)}</span>
-                      <span className="text-emerald-700 font-black">{event.time_sec}s</span>
+                  <div
+                    key={train}
+                    onClick={() => setHighlightedTrain(isSelected ? null : train)}
+                    className={`flex items-center justify-between text-xs px-3 py-2 rounded-xl border font-mono shadow-sm cursor-pointer transition-all ${
+                      isSelected
+                        ? 'bg-emerald-50/90 border-emerald-500 ring-2 ring-emerald-500'
+                        : 'bg-white/95 border-stone-200 hover:border-emerald-300'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2 truncate">
+                      <span className="text-stone-800 font-bold truncate max-w-[200px]">{train}</span>
+                      {isSelected && (
+                        <span className="text-[9px] font-bold bg-emerald-600 text-white px-1.5 py-0.2 rounded">
+                          Active
+                        </span>
+                      )}
                     </div>
-                    <div className="h-2 w-full bg-[#d8d0c0] rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full transition-all duration-300"
-                        style={{ width: `${Math.min(100, progressPct)}%` }}
-                      />
+                    <div className="flex items-center space-x-2 shrink-0">
+                      <span className="text-stone-500 font-medium">
+                        {Math.floor(sched.start / 60)}:{String(sched.start % 60).padStart(2, '0')}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                          sched.delay === 0
+                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                            : 'bg-amber-100 text-amber-800 border-amber-300'
+                        }`}
+                      >
+                        {sched.delay === 0 ? 'ON TIME' : `+${sched.delay}m`}
+                      </span>
                     </div>
                   </div>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Train Slot Adjustments Preview */}
-          <div className="pt-3 border-t border-[#e8e2d4]">
-            <span className="text-xs font-bold text-stone-700">
-              Punctuality Schedule Impact (Bhopal Section)
-            </span>
-            <div className="mt-2.5 space-y-2">
-              {Object.entries(solverResult.train_schedules).map(([train, sched]) => (
-                <div
-                  key={train}
-                  className="flex items-center justify-between text-xs bg-white/95 px-3 py-2 rounded-xl border border-stone-200 font-mono shadow-sm"
-                >
-                  <span className="text-stone-800 font-bold truncate max-w-[200px]">{train}</span>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-stone-500 font-medium">
-                      {Math.floor(sched.start / 60)}:{String(sched.start % 60).padStart(2, '0')}
-                    </span>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                        sched.delay === 0
-                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                          : 'bg-amber-100 text-amber-800 border-amber-300'
-                      }`}
-                    >
-                      {sched.delay === 0 ? 'ON TIME' : `+${sched.delay}m`}
-                    </span>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>
@@ -273,4 +359,5 @@ export const SolverView: React.FC<SolverViewProps> = ({
     </div>
   );
 };
+
 

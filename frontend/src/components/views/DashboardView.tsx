@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Activity,
@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { BlockDemand, SolverResult } from '@/types';
 import { MOCK_DEMANDS, MOCK_SOLVER_RESULT } from '@/data/mockData';
 import { formatMinutesToTime } from '@/lib/utils';
 import { TrackStripMap } from '@/components/cockpit/TrackStripMap';
@@ -22,6 +23,8 @@ interface DashboardViewProps {
   onRunSolver: () => void;
   solverStatus: 'idle' | 'solving' | 'done';
   onNavigate: (view: 'dashboard' | 'demands' | 'solver' | 'lifecycle' | 'settings') => void;
+  demands?: BlockDemand[];
+  solverResult?: SolverResult;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -29,7 +32,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onRunSolver,
   solverStatus,
   onNavigate,
+  demands = MOCK_DEMANDS,
+  solverResult = MOCK_SOLVER_RESULT,
 }) => {
+  const criticalCount = demands.filter((d) => d.severity_tier === 'CRITICAL').length;
+  const reviewedCount = demands.filter((d) => d.status === 'REVIEWED').length;
+  const approvedCount = demands.filter((d) => d.status === 'APPROVED').length;
+
+  const totalShadowSaved = solverResult.xai?.shadow_detections?.reduce(
+    (acc, s) => acc + s.time_saved_hours,
+    0
+  ) || 3.5;
+
+  const [activeIncident, setActiveIncident] = useState<{
+    id: string;
+    label: string;
+    title: string;
+    location: string;
+    tsr: string;
+  } | null>(null);
+
+  const handleReoptimize = () => {
+    setActiveIncident(null);
+    onRunSolver();
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Disruption Simulator Banner with smooth drop-down Framer Motion transition & looping amber glow */}
@@ -61,13 +88,73 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <motion.button
                   whileHover={{ scale: 1.02, boxShadow: '0 4px 14px rgba(180,83,9,0.35)' }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={onRunSolver}
+                  onClick={handleReoptimize}
                   disabled={solverStatus === 'solving'}
-                  className="inline-flex items-center justify-center text-xs font-bold bg-gradient-to-r from-amber-700 to-amber-800 text-white px-4 py-2 rounded-xl shadow-[0_3px_10px_rgba(180,83,9,0.25)] shrink-0 border border-amber-900/40"
+                  className={`inline-flex items-center justify-center text-xs font-bold bg-gradient-to-r from-amber-700 to-amber-800 text-white px-4 py-2 rounded-xl shadow-[0_3px_10px_rgba(180,83,9,0.25)] shrink-0 border border-amber-900/40 ${
+                    activeIncident ? 'ring-2 ring-rose-500 animate-pulse' : ''
+                  }`}
                 >
                   <Play className="mr-1.5 h-3.5 w-3.5 fill-current" />
                   Re-optimize Corridor
                 </motion.button>
+              </div>
+
+              {/* Interactive Realistic Railway Incident Injector Chips */}
+              <div className="mt-3 pt-3 border-t border-amber-200/80 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                  <span className="text-[10px] font-bold uppercase text-amber-900 font-mono mr-1">
+                    Inject Field Incident:
+                  </span>
+                  {[
+                    {
+                      id: 'ohe',
+                      label: '⚡ OHE Wire Snag (MDDP)',
+                      title: 'OHE Pantograph Entanglement at Mandideep',
+                      location: 'MDDP (km 114.2)',
+                      tsr: 'Power Cut / Diesel Haulage Only',
+                    },
+                    {
+                      id: 'fracture',
+                      label: '🛤️ USFD Rail Fracture (BNS)',
+                      title: 'Ultrasonic Flaw Detector Fracture at Vidisha',
+                      location: 'BNS (km 61.9)',
+                      tsr: 'TSR 20 km/h Imposed',
+                    },
+                    {
+                      id: 'point',
+                      label: '🚨 Point Clashing (BINA)',
+                      title: 'Facing Point Lock Clashing at Bina Yard',
+                      location: 'BINA (km 8.0)',
+                      tsr: 'Platform 3 Blocked',
+                    },
+                  ].map((inc) => (
+                    <button
+                      key={inc.id}
+                      type="button"
+                      onClick={() => setActiveIncident(inc)}
+                      className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all border ${
+                        activeIncident?.id === inc.id
+                          ? 'bg-amber-950 text-amber-100 border-amber-950 shadow-sm'
+                          : 'bg-white/80 hover:bg-white text-amber-900 border-amber-300 shadow-xs'
+                      }`}
+                    >
+                      {inc.label}
+                    </button>
+                  ))}
+                </div>
+
+                {activeIncident && (
+                  <div className="flex items-center gap-2 text-xs text-rose-900 font-bold bg-rose-100/90 px-3 py-1 rounded-xl border border-rose-300 animate-pulse">
+                    <span>🚨 {activeIncident.title} • {activeIncident.tsr}</span>
+                    <button
+                      type="button"
+                      onClick={() => setActiveIncident(null)}
+                      className="text-rose-500 hover:text-rose-900 ml-1 font-extrabold"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -76,14 +163,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       {/* Hero KPI Cards (4 Grid Columns) - Neumorphic with count-up & hover elevation */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Card 1: Total Demands */}
+        {/* Card 1: Total Demands -> Navigates to Demands */}
         <motion.div
           whileHover={{ y: -3 }}
-          className="neumorphic-card neumorphic-card-hover rounded-2xl p-4 flex flex-col justify-between"
+          onClick={() => onNavigate('demands')}
+          title="Click to manage and review corridor demands"
+          className="neumorphic-card neumorphic-card-hover group cursor-pointer rounded-2xl p-4 flex flex-col justify-between transition-all hover:border-sky-300"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Total Demands</span>
-            <div className="rounded-xl bg-sky-100 p-2 text-sky-700 border border-sky-200/70 shadow-sm">
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Total Demands</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-stone-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="rounded-xl bg-sky-100 p-2 text-sky-700 border border-sky-200/70 shadow-sm group-hover:scale-105 transition-transform">
               <Activity className="h-4 w-4" />
             </div>
           </div>
@@ -92,14 +184,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <div className="flex items-baseline space-x-2">
                 <span className="text-3xl font-black tracking-tight text-stone-900 font-mono">
-                  5
+                  {demands.length}
                 </span>
                 <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300">
-                  +3 new today
+                  Active Demands
                 </span>
               </div>
               <div className="mt-2 text-[11px] text-stone-500 font-medium">
-                Critical: <strong className="text-rose-600">2</strong> &nbsp;Reviewed: <strong>1</strong> &nbsp;Approved: <strong className="text-emerald-700">2</strong>
+                Critical: <strong className="text-rose-600">{criticalCount}</strong> &nbsp;Reviewed: <strong>{reviewedCount}</strong> &nbsp;Approved: <strong className="text-emerald-700">{approvedCount}</strong>
               </div>
             </div>
 
@@ -116,14 +208,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </motion.div>
 
-        {/* Card 2: Shadow Block Savings */}
+        {/* Card 2: Shadow Block Savings -> Navigates to Solver */}
         <motion.div
           whileHover={{ y: -3 }}
-          className="neumorphic-card neumorphic-card-hover rounded-2xl p-4 flex flex-col justify-between"
+          onClick={() => onNavigate('solver')}
+          title="Click to view shadow block optimization cockpit"
+          className="neumorphic-card neumorphic-card-hover group cursor-pointer rounded-2xl p-4 flex flex-col justify-between transition-all hover:border-emerald-300"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Shadow Block Savings</span>
-            <div className="rounded-xl bg-emerald-100 p-2 text-emerald-700 border border-emerald-200/70 shadow-sm">
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Shadow Block Savings</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-stone-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="rounded-xl bg-emerald-100 p-2 text-emerald-700 border border-emerald-200/70 shadow-sm group-hover:scale-105 transition-transform">
               <Layers className="h-4 w-4" />
             </div>
           </div>
@@ -132,10 +229,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div>
               <div className="flex items-baseline space-x-2">
                 <span className="text-3xl font-black tracking-tight text-emerald-800 font-mono">
-                  3.5 hrs
+                  {totalShadowSaved} hrs
                 </span>
                 <span className="text-[11px] font-bold text-emerald-900 bg-emerald-100/90 px-2 py-0.5 rounded-full border border-emerald-300">
-                  2 Merges
+                  {solverResult.shadow_merges} Merges
                 </span>
               </div>
               <p className="mt-2 text-[11px] text-stone-500 font-medium leading-tight">
@@ -156,14 +253,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </motion.div>
 
-        {/* Card 3: Train Delay Impact */}
+        {/* Card 3: Train Delay Impact -> Navigates to Solver */}
         <motion.div
           whileHover={{ y: -3 }}
-          className="neumorphic-card neumorphic-card-hover rounded-2xl p-4 flex flex-col justify-between"
+          onClick={() => onNavigate('solver')}
+          title="Click to view train punctuality & delay reasoning"
+          className="neumorphic-card neumorphic-card-hover group cursor-pointer rounded-2xl p-4 flex flex-col justify-between transition-all hover:border-indigo-300"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Train Delay Impact</span>
-            <div className="rounded-xl bg-indigo-100 p-2 text-indigo-700 border border-indigo-200/70 shadow-sm">
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Train Delay Impact</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-stone-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="rounded-xl bg-indigo-100 p-2 text-indigo-700 border border-indigo-200/70 shadow-sm group-hover:scale-105 transition-transform">
               <TrendingDown className="h-4 w-4" />
             </div>
           </div>
@@ -196,14 +298,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </motion.div>
 
-        {/* Card 4: Kavach Commissioned */}
+        {/* Card 4: Kavach Commissioned -> Navigates to Settings */}
         <motion.div
           whileHover={{ y: -3 }}
-          className="neumorphic-card neumorphic-card-hover rounded-2xl p-4 flex flex-col justify-between"
+          onClick={() => onNavigate('settings')}
+          title="Click to view Kavach safety parameters"
+          className="neumorphic-card neumorphic-card-hover group cursor-pointer rounded-2xl p-4 flex flex-col justify-between transition-all hover:border-teal-300"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Kavach Commissioned</span>
-            <div className="rounded-xl bg-teal-100 p-2 text-teal-700 border border-teal-200/70 shadow-sm">
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Kavach Commissioned</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-stone-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="rounded-xl bg-teal-100 p-2 text-teal-700 border border-teal-200/70 shadow-sm group-hover:scale-105 transition-transform">
               <ShieldCheck className="h-4 w-4" />
             </div>
           </div>
@@ -262,7 +369,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           <div className="space-y-3">
-            {MOCK_DEMANDS.slice(0, 3).map((demand) => (
+            {demands.slice(0, 3).map((demand) => (
               <div
                 key={demand.id}
                 className="flex flex-col sm:flex-row sm:items-center justify-between rounded-xl neumorphic-inset p-3.5 hover:border-stone-400 transition-all gap-3"

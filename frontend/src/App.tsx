@@ -5,16 +5,29 @@ import { StatusBar } from '@/components/layout/StatusBar';
 import { DashboardView } from '@/components/views/DashboardView';
 import { MareyView } from '@/components/views/MareyView';
 import { DemandsView } from '@/components/views/DemandsView';
-
 import { SolverView } from '@/components/views/SolverView';
 import { LifecycleView } from '@/components/views/LifecycleView';
 import { SettingsView } from '@/components/views/SettingsView';
-import { MOCK_DEMANDS } from '@/data/mockData';
+import { BlockDemand, SolverResult, TelemetryEvent } from '@/types';
+import {
+  PRESET_SCENARIOS,
+  MOCK_TELEMETRY,
+} from '@/data/mockData';
 
 export const App: React.FC = () => {
   // Navigation State
   const [activeNav, setActiveNav] = useState<NavItemKey>('dashboard');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
+
+  // Scenario State
+  const [currentScenario, setCurrentScenario] = useState<string>('standard');
+  const [demands, setDemands] = useState<BlockDemand[]>(
+    PRESET_SCENARIOS['standard'].demands
+  );
+  const [solverResult, setSolverResult] = useState<SolverResult>(
+    PRESET_SCENARIOS['standard'].defaultSolverResult
+  );
+  const [telemetryData, setTelemetryData] = useState<TelemetryEvent[]>(MOCK_TELEMETRY);
 
   // System Controls State
   const [chaosMode, setChaosMode] = useState<boolean>(false);
@@ -24,23 +37,85 @@ export const App: React.FC = () => {
   const [lastSolveTime, setLastSolveTime] = useState<string>('19:42:08 IST');
   const [solveDurationSec, setSolveDurationSec] = useState<number>(1.84);
 
-  // Handler for running the solver
+  // Live Multi-stage Solver Animation State
+  const [solvingPhase, setSolvingPhase] = useState<string>(
+    'Phase 1: Ingesting Demands & Pruning Overlaps...'
+  );
+  const [solvingProgress, setSolvingProgress] = useState<number>(0);
+
+  // Scenario Switcher Handler
+  const handleSelectScenario = (scenarioId: string) => {
+    const scen = PRESET_SCENARIOS[scenarioId];
+    if (!scen) return;
+    setCurrentScenario(scenarioId);
+    setDemands([...scen.demands]);
+    setSolverResult({ ...scen.defaultSolverResult });
+    setActiveSessionId(scen.defaultSolverResult.solve_id);
+    setSolverStatus('idle');
+  };
+
+  // Demand CRUD Handlers
+  const handleAddDemand = (demand: BlockDemand) => {
+    setDemands((prev) => [demand, ...prev]);
+  };
+
+  const handleUpdateDemand = (updated: BlockDemand) => {
+    setDemands((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
+  };
+
+  const handleDeleteDemand = (id: number) => {
+    setDemands((prev) => prev.filter((d) => d.id !== id));
+  };
+
+  // Realistic Multi-Stage AI Solver Simulation
   const handleRunSolver = () => {
     if (solverStatus === 'solving') return;
 
     setSolverStatus('solving');
-    const startTime = Date.now();
+    setSolvingProgress(15);
+    setSolvingPhase('Phase 1: Ingesting Corridor Demands & Feasibility Bounds...');
 
+    // Stage 2: Boolean Formulations
     setTimeout(() => {
-      const elapsed = Number(((Date.now() - startTime) / 1000).toFixed(2));
+      setSolvingProgress(45);
+      setSolvingPhase('Phase 2: CP-SAT Boolean Headway & Kavach SIL-4 Bounds...');
+    }, 600);
+
+    // Stage 3: Pareto Frontier & Shadow Merging
+    setTimeout(() => {
+      setSolvingProgress(75);
+      setSolvingPhase('Phase 3: Multi-Objective Pareto Frontier & Shadow Harvesting...');
+    }, 1300);
+
+    // Stage 4: Convergence
+    setTimeout(() => {
+      setSolvingProgress(95);
+      setSolvingPhase('Phase 4: Proving Global Optimum with Zero Train Penalties...');
+    }, 1900);
+
+    // Done
+    setTimeout(() => {
+      setSolvingProgress(100);
       setSolverStatus('done');
-      setSolveDurationSec(elapsed);
+      setSolveDurationSec(2.14);
       const now = new Date();
       setLastSolveTime(
         `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} IST`
       );
-      setActiveSessionId(`SOLV-2026-BPL-${Math.floor(1000 + Math.random() * 9000)}`);
-    }, 1600);
+      const newSession = `SOLV-2026-BPL-${Math.floor(1000 + Math.random() * 9000)}`;
+      setActiveSessionId(newSession);
+
+      // Re-harmonize solver result with dynamic shadow counts
+      setSolverResult((prev) => ({
+        ...prev,
+        solve_id: newSession,
+        status: 'OPTIMAL',
+        optimality_gap: 0.0,
+        wall_time_sec: 2.14,
+        clashes_detected: 0,
+        shadow_merges: Math.max(2, Math.floor(demands.length / 2)),
+      }));
+    }, 2400);
   };
 
   // Nav Title Helper
@@ -57,7 +132,6 @@ export const App: React.FC = () => {
           subtitle: 'Interactive Stringline Timetable & Block Bands (D3.js)',
         };
       case 'demands':
-
         return {
           title: 'Block Demands',
           subtitle: 'TMS, SMMS & TDMS Maintenance Requests',
@@ -70,7 +144,7 @@ export const App: React.FC = () => {
       case 'lifecycle':
         return {
           title: 'Block Lifecycle',
-          subtitle: 'Proposal to SAVIAN Execution Pipeline',
+          subtitle: 'Proposal to Station Master Line-Clear Execution Pipeline',
         };
       case 'settings':
         return {
@@ -78,7 +152,7 @@ export const App: React.FC = () => {
           subtitle: 'Corridor Rules & Kavach Constraints',
         };
       default:
-        return { title: 'SAVIAN' };
+        return { title: 'Line-Clear' };
     }
   };
 
@@ -92,8 +166,8 @@ export const App: React.FC = () => {
         onSelectNav={(key) => setActiveNav(key)}
         mobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
-        demandCount={MOCK_DEMANDS.length}
-        activeClashes={0}
+        demandCount={demands.length}
+        activeClashes={solverResult.clashes_detected}
       />
 
       {/* 2. Main Wrapper (Offset on desktop for w-64 sidebar) */}
@@ -108,11 +182,12 @@ export const App: React.FC = () => {
           solverStatus={solverStatus}
           onRunSolver={handleRunSolver}
           unreadAlertCount={3}
+          currentScenario={currentScenario}
+          onSelectScenario={handleSelectScenario}
         />
 
         {/* Center Main Content Area (Scrollable) */}
         <main className="flex-1 overflow-y-auto bg-[#f5f3ec] p-4 sm:p-6">
-
           <div className="mx-auto max-w-7xl">
             {activeNav === 'dashboard' && (
               <DashboardView
@@ -120,6 +195,8 @@ export const App: React.FC = () => {
                 onRunSolver={handleRunSolver}
                 solverStatus={solverStatus}
                 onNavigate={(view) => setActiveNav(view as any)}
+                demands={demands}
+                solverResult={solverResult}
               />
             )}
 
@@ -130,17 +207,32 @@ export const App: React.FC = () => {
               />
             )}
 
-            {activeNav === 'demands' && <DemandsView />}
-
+            {activeNav === 'demands' && (
+              <DemandsView
+                demands={demands}
+                onAddDemand={handleAddDemand}
+                onUpdateDemand={handleUpdateDemand}
+                onDeleteDemand={handleDeleteDemand}
+              />
+            )}
 
             {activeNav === 'solver' && (
               <SolverView
                 solverStatus={solverStatus}
                 onRunSolver={handleRunSolver}
+                solverResult={solverResult}
+                telemetryData={telemetryData}
+                solvingPhase={solvingPhase}
+                solvingProgress={solvingProgress}
               />
             )}
 
-            {activeNav === 'lifecycle' && <LifecycleView />}
+            {activeNav === 'lifecycle' && (
+              <LifecycleView
+                demands={demands}
+                onUpdateDemand={handleUpdateDemand}
+              />
+            )}
 
             {activeNav === 'settings' && <SettingsView />}
           </div>
@@ -153,7 +245,7 @@ export const App: React.FC = () => {
           activeSessionId={activeSessionId}
           lastSolveTime={lastSolveTime}
           solveDurationSec={solveDurationSec}
-          optimalityGap={0.0}
+          optimalityGap={solverResult.optimality_gap}
         />
       </div>
     </div>
@@ -161,3 +253,4 @@ export const App: React.FC = () => {
 };
 
 export default App;
+

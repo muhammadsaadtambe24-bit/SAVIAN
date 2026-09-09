@@ -16,7 +16,8 @@ export const MOCK_STATIONS: Station[] = [
   { id: 13, code: 'ET', name: 'Itarsi Junction', distance_km: 152.4, division: 'BPL', zone: 'WCR', kavach_status: 'COMMISSIONED' },
 ];
 
-export const MOCK_DEMANDS: BlockDemand[] = [
+// Scenario 1: Standard High-Density Bhopal-Itarsi
+export const SCENARIO_STANDARD_DEMANDS: BlockDemand[] = [
   {
     id: 101,
     demand_code: 'TMS-2026-089',
@@ -136,6 +137,295 @@ export const MOCK_DEMANDS: BlockDemand[] = [
   },
 ];
 
+// Scenario 2: Monsoon Emergency & High Friction Disruption
+export const SCENARIO_MONSOON_DEMANDS: BlockDemand[] = [
+  {
+    id: 201,
+    demand_code: 'TMS-2026-144',
+    source_system: 'TMS',
+    department: 'P_WAY',
+    section_from: 'BHS',
+    section_to: 'SCI',
+    start_km: 63.5,
+    end_km: 67.2,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 90, // 01:30
+    requested_end_minutes: 270,  // 04:30
+    required_minutes: 180,
+    activity_description: 'Emergency Cess Boulder Packing & Mud Pumping ballast rehabilitation post torrential rain',
+    machinery_type: 'UNOMAT Tamping Machine',
+    machinery_id: 'UNO-104',
+    status: 'PROPOSED',
+    trust_score: 96,
+    severity_tier: 'CRITICAL',
+    priority_weight: 10.0,
+    power_block_required: false,
+    disconnection_required: true,
+    speed_restriction_kmph: 20,
+  },
+  {
+    id: 202,
+    demand_code: 'SMMS-2026-150',
+    source_system: 'SMMS',
+    department: 'OHE',
+    section_from: 'BHS',
+    section_to: 'SCI',
+    start_km: 63.0,
+    end_km: 68.0,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 100, // 01:40
+    requested_end_minutes: 240,   // 04:00
+    required_minutes: 140,
+    activity_description: 'Emergency Insulator replacement and tree branch clearance near mast 65/12',
+    machinery_type: 'Tower Wagon',
+    machinery_id: 'TW-19',
+    status: 'PROPOSED',
+    trust_score: 90,
+    severity_tier: 'CRITICAL',
+    priority_weight: 9.2,
+    power_block_required: true,
+    disconnection_required: false,
+  },
+  {
+    id: 203,
+    demand_code: 'TDMS-2026-077',
+    source_system: 'TDMS',
+    department: 'S_AND_T',
+    section_from: 'BHS',
+    section_to: 'BHS',
+    start_km: 61.9,
+    end_km: 62.5,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 120, // 02:00
+    requested_end_minutes: 210,   // 03:30
+    required_minutes: 90,
+    activity_description: 'Digital Axle Counter (DAC) track sensor recalibration after waterlogging reset',
+    machinery_type: 'Electronic Calibration Unit',
+    machinery_id: 'ECU-03',
+    status: 'REVIEWED',
+    trust_score: 87,
+    severity_tier: 'HIGH',
+    priority_weight: 8.4,
+    power_block_required: false,
+    disconnection_required: true,
+  },
+  {
+    id: 204,
+    demand_code: 'TMS-2026-152',
+    source_system: 'TMS',
+    department: 'P_WAY',
+    section_from: 'MDDP',
+    section_to: 'BKA',
+    start_km: 118.0,
+    end_km: 124.0,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 360, // 06:00
+    requested_end_minutes: 480,   // 08:00
+    required_minutes: 120,
+    activity_description: 'Rail flaw ultrasonic USFD flaw detection and fishplate bolt tightening',
+    machinery_type: 'USFD Trolley',
+    machinery_id: 'USFD-28',
+    status: 'APPROVED',
+    trust_score: 91,
+    severity_tier: 'HIGH',
+    priority_weight: 7.5,
+    power_block_required: false,
+    disconnection_required: false,
+    speed_restriction_kmph: 50,
+  },
+  {
+    id: 205,
+    demand_code: 'SMMS-2026-158',
+    source_system: 'SMMS',
+    department: 'OHE',
+    section_from: 'BINA',
+    section_to: 'KIKA',
+    start_km: 1.5,
+    end_km: 6.0,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 180, // 03:00
+    requested_end_minutes: 300,   // 05:00
+    required_minutes: 120,
+    activity_description: 'OHE Catenary wire tension regulation and auto-tensioning device (ATD) overhaul',
+    machinery_type: 'Tower Wagon',
+    machinery_id: 'TW-88',
+    status: 'EXECUTED',
+    trust_score: 89,
+    severity_tier: 'MEDIUM',
+    priority_weight: 6.8,
+    power_block_required: true,
+    disconnection_required: false,
+  },
+  {
+    id: 206,
+    demand_code: 'TMS-2026-160',
+    source_system: 'TMS',
+    department: 'P_WAY',
+    section_from: 'ODG',
+    section_to: 'ET',
+    start_km: 144.0,
+    end_km: 150.5,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 50,  // 00:50
+    requested_end_minutes: 180,   // 03:00
+    required_minutes: 130,
+    activity_description: 'Pre-stressed Concrete Sleeper renewal and elastic rail clip greasing',
+    machinery_type: 'Manual Gang 08',
+    machinery_id: 'GANG-08',
+    status: 'CLOSED',
+    trust_score: 94,
+    severity_tier: 'LOW',
+    priority_weight: 5.1,
+    power_block_required: false,
+    disconnection_required: true,
+  },
+];
+
+// Scenario 3: Heavy Night Freight & Infrastructure Mega-Block
+export const SCENARIO_NIGHT_MEGA_DEMANDS: BlockDemand[] = [
+  {
+    id: 301,
+    demand_code: 'TMS-2026-210',
+    source_system: 'TMS',
+    department: 'P_WAY',
+    section_from: 'BINA',
+    section_to: 'BAQ',
+    start_km: 0.0,
+    end_km: 33.1,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 30,  // 00:30
+    requested_end_minutes: 270,  // 04:30
+    required_minutes: 240,
+    activity_description: 'Coordinated Quad-Machine Track Renewal Train (TRT) rail continuous replacement',
+    machinery_type: 'TRT Plasser Indian Rly',
+    machinery_id: 'TRT-01',
+    status: 'APPROVED',
+    trust_score: 98,
+    severity_tier: 'CRITICAL',
+    priority_weight: 9.9,
+    power_block_required: true,
+    disconnection_required: true,
+    speed_restriction_kmph: 30,
+  },
+  {
+    id: 302,
+    demand_code: 'SMMS-2026-214',
+    source_system: 'SMMS',
+    department: 'OHE',
+    section_from: 'BINA',
+    section_to: 'KIKA',
+    start_km: 0.0,
+    end_km: 12.0,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 45,  // 00:45
+    requested_end_minutes: 255,  // 04:15
+    required_minutes: 210,
+    activity_description: '25kV AC feeder wire restringing & bracket insulator replacement under TRT shadow',
+    machinery_type: 'Tower Wagon Special',
+    machinery_id: 'TW-302',
+    status: 'APPROVED',
+    trust_score: 93,
+    severity_tier: 'HIGH',
+    priority_weight: 8.9,
+    power_block_required: true,
+    disconnection_required: false,
+  },
+  {
+    id: 303,
+    demand_code: 'TDMS-2026-218',
+    source_system: 'TDMS',
+    department: 'S_AND_T',
+    section_from: 'KIKA',
+    section_to: 'MNDR',
+    start_km: 8.4,
+    end_km: 19.8,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 60,  // 01:00
+    requested_end_minutes: 240,  // 04:00
+    required_minutes: 180,
+    activity_description: 'Kavach SIL-4 Trackside Radio (TSR) balise reprogramming and fiber test',
+    machinery_type: 'Kavach Diagnostic Car',
+    machinery_id: 'KAVACH-TEST-02',
+    status: 'APPROVED',
+    trust_score: 97,
+    severity_tier: 'CRITICAL',
+    priority_weight: 9.4,
+    power_block_required: false,
+    disconnection_required: true,
+  },
+  {
+    id: 304,
+    demand_code: 'SMMS-2026-222',
+    source_system: 'SMMS',
+    department: 'OHE',
+    section_from: 'BAQ',
+    section_to: 'GLG',
+    start_km: 33.1,
+    end_km: 45.7,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 90,  // 01:30
+    requested_end_minutes: 240,  // 04:00
+    required_minutes: 150,
+    activity_description: 'Sub-station circuit breaker SF6 pressure test and traction feeder maintenance',
+    machinery_type: 'Traction Testing Rig',
+    machinery_id: 'TTR-05',
+    status: 'REVIEWED',
+    trust_score: 91,
+    severity_tier: 'MEDIUM',
+    priority_weight: 7.2,
+    power_block_required: true,
+    disconnection_required: true,
+  },
+  {
+    id: 305,
+    demand_code: 'TMS-2026-225',
+    source_system: 'TMS',
+    department: 'P_WAY',
+    section_from: 'BPL',
+    section_to: 'RKMP',
+    start_km: 92.3,
+    end_km: 98.7,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 120, // 02:00
+    requested_end_minutes: 240, // 04:00
+    required_minutes: 120,
+    activity_description: 'Diamond crossover switch turnout tongue rail grinding and testing',
+    machinery_type: 'RG48 Rail Grinder',
+    machinery_id: 'RG-48',
+    status: 'PROPOSED',
+    trust_score: 89,
+    severity_tier: 'HIGH',
+    priority_weight: 8.1,
+    power_block_required: false,
+    disconnection_required: true,
+  },
+  {
+    id: 306,
+    demand_code: 'TDMS-2026-230',
+    source_system: 'TDMS',
+    department: 'S_AND_T',
+    section_from: 'RKMP',
+    section_to: 'MDDP',
+    start_km: 98.7,
+    end_km: 114.2,
+    requested_date: '2026-09-09',
+    requested_start_minutes: 150, // 02:30
+    requested_end_minutes: 270, // 04:30
+    required_minutes: 120,
+    activity_description: 'Level Crossing Gate No. 248 interlocked boom barrier motor upgrade',
+    machinery_type: 'S&T Gang 04',
+    machinery_id: 'STG-04',
+    status: 'PROPOSED',
+    trust_score: 86,
+    severity_tier: 'MEDIUM',
+    priority_weight: 6.4,
+    power_block_required: false,
+    disconnection_required: true,
+  },
+];
+
+export const MOCK_DEMANDS = SCENARIO_STANDARD_DEMANDS;
+
 export const MOCK_SOLVER_RESULT: SolverResult = {
   solve_id: 'SOLV-2026-BPL-0941',
   status: 'OPTIMAL',
@@ -221,3 +511,150 @@ export const MOCK_TELEMETRY: TelemetryEvent[] = [
   { iteration: 20, objective_cost: 154.0, best_bound: 140.0, time_sec: 1.5 },
   { iteration: 28, objective_cost: 142.5, best_bound: 142.5, time_sec: 1.84 },
 ];
+
+export interface ScenarioDefinition {
+  id: string;
+  name: string;
+  description: string;
+  badge: string;
+  demands: BlockDemand[];
+  defaultSolverResult: SolverResult;
+}
+
+export const PRESET_SCENARIOS: Record<string, ScenarioDefinition> = {
+  standard: {
+    id: 'standard',
+    name: 'Bhopal–Itarsi (Regular High-Density)',
+    description: 'Daily mixed passenger & freight schedule with scheduled P-Way & OHE maintenance',
+    badge: 'Standard Day',
+    demands: SCENARIO_STANDARD_DEMANDS,
+    defaultSolverResult: MOCK_SOLVER_RESULT,
+  },
+  monsoon: {
+    id: 'monsoon',
+    name: 'Monsoon Emergency & Track Slips',
+    description: 'Post-torrential rain ballast washout near Vidisha requiring urgent track and OHE inspection',
+    badge: 'Emergency Focus',
+    demands: SCENARIO_MONSOON_DEMANDS,
+    defaultSolverResult: {
+      solve_id: 'SOLV-2026-MONSOON-312',
+      status: 'OPTIMAL',
+      objective_value: 218.4,
+      optimality_gap: 0.0,
+      wall_time_sec: 2.21,
+      train_schedules: {
+        '12002_NDLS_BPL_SHATABDI': { start: 140, end: 235, delay: 15 },
+        '12155_SHAN_E_BHOPAL': { start: 195, end: 310, delay: 25 },
+        '20805_ANDHRA_PRADESH_EXP': { start: 240, end: 360, delay: 0 },
+        'BOXN_FREIGHT_8821': { start: 90, end: 280, delay: 40 },
+      },
+      block_schedules: {
+        'TMS-2026-144': { start: 90, end: 270, section: 'BHS-SCI', is_shadow: false },
+        'SMMS-2026-150': { start: 100, end: 240, section: 'BHS-SCI', is_shadow: true, shadow_parent: 'TMS-2026-144' },
+        'TDMS-2026-077': { start: 120, end: 210, section: 'BHS-BHS', is_shadow: true, shadow_parent: 'TMS-2026-144' },
+      },
+      clashes_detected: 1,
+      shadow_merges: 3,
+      xai: {
+        conflict_resolutions: [
+          {
+            block_id: 'TMS-2026-144',
+            shifted_minutes: 0,
+            reason: 'Critical safety priority: UNOMAT machine granted absolute possession over freight paths',
+          },
+          {
+            block_id: 'SMMS-2026-150',
+            shifted_minutes: -10,
+            reason: 'Co-aligned with P-Way emergency possession to utilize common traction shutdown',
+          },
+          {
+            block_id: 'BOXN_FREIGHT_8821',
+            shifted_minutes: 40,
+            reason: 'Looped at Gulabganj loop line to allow uninterrupted 180 min deep screening block',
+          },
+        ],
+        shadow_detections: [
+          {
+            primary: 'TMS-2026-144 (P_WAY)',
+            shadow: 'SMMS-2026-150 (OHE)',
+            time_saved_hours: 2.33,
+          },
+          {
+            primary: 'TMS-2026-144 (P_WAY)',
+            shadow: 'TDMS-2026-077 (S_AND_T)',
+            time_saved_hours: 1.5,
+          },
+        ],
+        constraint_waterfall: {
+          train_delay_pct: 26.5,
+          block_deviation_pct: 2.1,
+          shadow_bonus_pct: 35.8,
+        },
+      },
+    },
+  },
+  night_mega: {
+    id: 'night_mega',
+    name: 'Night Infrastructure Mega-Block',
+    description: 'Coordinated quad-machine track renewal train (TRT) deployment with 4 shadow windows',
+    badge: 'Max Efficiency',
+    demands: SCENARIO_NIGHT_MEGA_DEMANDS,
+    defaultSolverResult: {
+      solve_id: 'SOLV-2026-MEGA-8902',
+      status: 'OPTIMAL',
+      objective_value: 94.2,
+      optimality_gap: 0.0,
+      wall_time_sec: 1.62,
+      train_schedules: {
+        '12002_NDLS_BPL_SHATABDI': { start: 135, end: 220, delay: 0 },
+        '12155_SHAN_E_BHOPAL': { start: 180, end: 285, delay: 0 },
+        '20805_ANDHRA_PRADESH_EXP': { start: 240, end: 360, delay: 0 },
+        'BOXN_FREIGHT_8821': { start: 300, end: 450, delay: 0 },
+      },
+      block_schedules: {
+        'TMS-2026-210': { start: 30, end: 270, section: 'BINA-BAQ', is_shadow: false },
+        'SMMS-2026-214': { start: 45, end: 255, section: 'BINA-KIKA', is_shadow: true, shadow_parent: 'TMS-2026-210' },
+        'TDMS-2026-218': { start: 60, end: 240, section: 'KIKA-MNDR', is_shadow: true, shadow_parent: 'TMS-2026-210' },
+      },
+      clashes_detected: 0,
+      shadow_merges: 4,
+      xai: {
+        conflict_resolutions: [
+          {
+            block_id: 'TMS-2026-210',
+            shifted_minutes: 0,
+            reason: 'Placed in nocturnal traffic lull (00:30-04:30) with 0 passenger train conflicts',
+          },
+          {
+            block_id: 'SMMS-2026-214',
+            shifted_minutes: -15,
+            reason: 'Nested within TRT continuous possession; saved 3.5h independent line-clear overhead',
+          },
+          {
+            block_id: 'TDMS-2026-218',
+            shifted_minutes: 0,
+            reason: 'Parallel execution of Kavach radio diagnostic during OHE de-energized interval',
+          },
+        ],
+        shadow_detections: [
+          {
+            primary: 'TMS-2026-210 (TRT P_WAY)',
+            shadow: 'SMMS-2026-214 (OHE RESTRING)',
+            time_saved_hours: 3.5,
+          },
+          {
+            primary: 'TMS-2026-210 (TRT P_WAY)',
+            shadow: 'TDMS-2026-218 (KAVACH S_AND_T)',
+            time_saved_hours: 3.0,
+          },
+        ],
+        constraint_waterfall: {
+          train_delay_pct: 0.0,
+          block_deviation_pct: 0.0,
+          shadow_bonus_pct: 54.2,
+        },
+      },
+    },
+  },
+};
+

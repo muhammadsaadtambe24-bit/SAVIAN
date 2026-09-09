@@ -86,6 +86,8 @@ export const TrackStripMap: React.FC = () => {
   }, []);
 
   const currentStation = STRIP_STATIONS[activeStationIndex] || STRIP_STATIONS[0];
+  const isTsrZone = trainLeftPct >= 1 && trainLeftPct <= 16;
+  const currentSpeed = isTsrZone ? 30 : 130;
 
   return (
     <div className="neumorphic-card neumorphic-card-hover rounded-2xl p-5 space-y-4">
@@ -104,7 +106,7 @@ export const TrackStripMap: React.FC = () => {
         </div>
 
         {/* Legend matching reference colors */}
-        <div className="flex items-center gap-4 text-xs font-semibold text-stone-600">
+        <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-stone-600">
           <div className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-[#9bd8b5] border border-[#68b88d]" />
             <span>Commissioned</span>
@@ -116,6 +118,12 @@ export const TrackStripMap: React.FC = () => {
           <div className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-[#f3b2a3] border border-[#d98574]" />
             <span>Not Equipped</span>
+          </div>
+          <div className="flex items-center gap-1.5 border-l border-stone-200 pl-3">
+            <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-amber-400" />
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            <span className="text-[11px] font-mono text-stone-600 font-bold">CTC Signal Block</span>
           </div>
         </div>
       </div>
@@ -156,9 +164,27 @@ export const TrackStripMap: React.FC = () => {
             {/* Speed Metric */}
             <div className="flex items-center gap-1.5 text-xs">
               <span className="text-stone-400 font-medium text-[11px]">Speed:</span>
-              <span className="font-mono font-black text-stone-900 text-[11px]">110 km/h</span>
+              <span className={`font-mono font-black text-[11px] ${isTsrZone ? 'text-amber-700 font-extrabold' : 'text-stone-900'}`}>
+                {currentSpeed} km/h
+              </span>
+              {isTsrZone ? (
+                <span className="text-[9px] bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-1.5 py-0.2 rounded-full animate-pulse">
+                  ⚠ TSR 30km/h
+                </span>
+              ) : (
+                <span className="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 font-extrabold px-1.5 py-0.2 rounded-full">
+                  Normal
+                </span>
+              )}
             </div>
           </div>
+        </div>
+
+        {/* Active Block Maintenance Safety Envelope between BINA and KIKA */}
+        <div className="absolute top-[135px] left-[3%] w-[11%] h-[24px] rounded-lg border border-dashed border-amber-500 bg-amber-300/25 flex items-center justify-center z-5 shadow-[0_0_12px_rgba(245,158,11,0.3)] animate-pulse pointer-events-none">
+          <span className="text-[8px] font-mono font-black text-amber-950 bg-amber-100/90 px-1 py-0.5 rounded shadow-xs border border-amber-300">
+            ⚠ BLOCK km 2.5-6.8 (OHE CUT)
+          </span>
         </div>
 
         {/* 3 Continuous Track Lines running horizontally across stations */}
@@ -245,33 +271,83 @@ export const TrackStripMap: React.FC = () => {
         </div>
         {/* Station Nodes Layout (Evenly Spaced Across Full Width) */}
         <div className="relative z-10 flex justify-between items-start w-full">
-          {STRIP_STATIONS.map((st) => {
+          {STRIP_STATIONS.map((st, idx) => {
             const isGreen = st.status === 'green';
             const isAmber = st.status === 'amber';
             const isBlue = st.status === 'blue';
             const isRose = st.status === 'rose';
+
+            // Authentic 3-Aspect Automatic Block Signaling logic
+            const stationDist = Math.abs(idx - activeStationIndex);
+            const signalState: 'RED' | 'YELLOW' | 'GREEN' =
+              stationDist === 0 ? 'RED' : stationDist === 1 ? 'YELLOW' : 'GREEN';
 
             return (
               <div
                 key={st.code}
                 className="flex flex-col items-center group cursor-pointer"
               >
-                {/* Chainage KM label above disk */}
-                <span className="text-[10px] font-mono font-bold text-stone-500 mb-2">
-                  {st.topKm}
-                </span>
+                {/* Chainage KM label & Miniature Signal Post */}
+                <div className="flex flex-col items-center mb-1.5 space-y-0.5">
+                  <span className="text-[10px] font-mono font-bold text-stone-500">
+                    {st.topKm}
+                  </span>
+
+                  {/* Authentic 3-Aspect Railway Signal Post */}
+                  <div
+                    className="flex items-center gap-1 bg-stone-900/90 px-1.5 py-0.5 rounded-full border border-stone-700/80 shadow-xs"
+                    title={`Signal at ${st.code}: ${
+                      signalState === 'RED'
+                        ? 'RED / Block Occupied'
+                        : signalState === 'YELLOW'
+                        ? 'YELLOW / Approaching Caution'
+                        : 'GREEN / Line-Clear'
+                    }`}
+                  >
+                    <span
+                      className={cn(
+                        'h-1.5 w-1.5 rounded-full transition-all duration-300',
+                        signalState === 'RED'
+                          ? 'bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse'
+                          : 'bg-stone-800 opacity-40'
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        'h-1.5 w-1.5 rounded-full transition-all duration-300',
+                        signalState === 'YELLOW'
+                          ? 'bg-amber-400 shadow-[0_0_8px_#fbbf24] animate-pulse'
+                          : 'bg-stone-800 opacity-40'
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        'h-1.5 w-1.5 rounded-full transition-all duration-300',
+                        signalState === 'GREEN'
+                          ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]'
+                          : 'bg-stone-800 opacity-40'
+                      )}
+                    />
+                  </div>
+                </div>
 
                 {/* Circular Station Disk Sitting Directly on Track */}
-                <div
-                  className={cn(
-                    'flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border-[2.5px] text-[10px] sm:text-[11px] font-extrabold font-mono transition-transform duration-200 group-hover:scale-110 shadow-sm z-10',
-                    isGreen && 'border-[#75be96] bg-[#a8e0c0] text-[#14482e]',
-                    isAmber && 'border-[#e0aa6d] bg-[#f9cf9c] text-[#6d3e0c]',
-                    isBlue && 'border-[#76bdd6] bg-[#aee2f4] text-[#124d63]',
-                    isRose && 'border-[#df9182] bg-[#f7bfb4] text-[#67251a]'
+                <div className="relative flex items-center justify-center">
+                  {currentStation.code === st.code && (
+                    <span className="absolute h-14 w-14 rounded-full bg-emerald-400/40 animate-ping pointer-events-none z-0" />
                   )}
-                >
-                  {st.shortCode}
+                  <div
+                    className={cn(
+                      'flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border-[2.5px] text-[10px] sm:text-[11px] font-extrabold font-mono transition-transform duration-200 group-hover:scale-110 shadow-sm z-10',
+                      isGreen && 'border-[#75be96] bg-[#a8e0c0] text-[#14482e]',
+                      isAmber && 'border-[#e0aa6d] bg-[#f9cf9c] text-[#6d3e0c]',
+                      isBlue && 'border-[#76bdd6] bg-[#aee2f4] text-[#124d63]',
+                      isRose && 'border-[#df9182] bg-[#f7bfb4] text-[#67251a]',
+                      currentStation.code === st.code && 'ring-2 ring-emerald-500 ring-offset-2'
+                    )}
+                  >
+                    {st.shortCode}
+                  </div>
                 </div>
 
                 {/* Station Code Below */}

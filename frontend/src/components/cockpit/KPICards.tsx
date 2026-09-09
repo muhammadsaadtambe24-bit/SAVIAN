@@ -5,7 +5,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tooltip } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   AlertTriangle,
   Shield,
@@ -228,9 +233,16 @@ export function KPICards({ chaosResult, solverResult, chaosMode }: KPICardsProps
                       className={cn("text-4xl font-bold", activeColor)}
                     />
                     {!chaosMode && (
-                      <Tooltip content="One extra night because manual plan had an undetected clash that required rework.">
-                        <Info className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-help" />
-                      </Tooltip>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-help" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            One extra night because manual plan had an undetected clash that required rework.
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     )}
                   </div>
                   <div className="flex gap-3 text-xs text-muted-foreground mt-2">
